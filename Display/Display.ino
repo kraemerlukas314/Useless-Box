@@ -25,13 +25,15 @@ void setup() {
   Serial.print("Total button presses read from EEPROM: ");
   Serial.println(totalButtonPresses);
   tft.begin();
-  pinMode(PIN_BTN, INPUT_PULLUP);
-  displayClear();
   eyesDrawStatus();
-  mouthDrawStatus();
-  while (!getButtonState) {
-    // ANZEIGE: Bitte Schalter umlegen
-  }
+  
+  // pinMode(PIN_BTN, INPUT_PULLUP);
+  // displayClear();
+  // eyesDrawStatus();
+  // mouthDrawStatus();
+  // while (!getButtonState) {
+  //   // ANZEIGE: Bitte Schalter umlegen
+  // }
   // ANZEIGE: Insgesamt wurde der Schalter totalButtonPresses mal umgelegt
   // ANZEIGE: Kalibrierung
 }

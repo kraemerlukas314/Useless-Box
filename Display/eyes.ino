@@ -77,3 +77,16 @@ void eyesLookAtSwitch() {
 
 // eyelids
 
+void eyeLidLeftUp(double leftHeight, double rightHeight) {
+  tft.fillTriangle(EYE_LEFT_MIDDLE_X, Y_MIN, X_MIN, EYES_DISTANCE_EDGES + leftHeight, EYE_RIGHT_MIDDLE_X, EYES_DISTANCE_EDGES + rightHeight, BACKGROUND);
+}
+
+void eyeLidRightUp(double leftHeight, double rightHeight) {
+  tft.fillTriangle(EYE_RIGHT_MIDDLE_X, Y_MIN, X_MAX, EYES_DISTANCE_EDGES + rightHeight, EYE_RIGHT_MIDDLE_X - EYES_SIZE, EYES_DISTANCE_EDGES + leftHeight, BACKGROUND);
+}
+
+void eyeLidsUpDraw(double leftEyeLeftHeight, double leftEyeRightHeight, double rightEyeLeftHeight, double rightEyeRightHeight) {
+  eyesDrawStatus();
+  eyeLidLeftUp(leftEyeLeftHeight, leftEyeRightHeight);
+  eyeLidRightUp(rightEyeLeftHeight, rightEyeRightHeight);
+}
