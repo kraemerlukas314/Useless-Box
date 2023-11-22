@@ -29,9 +29,7 @@ int eyeRightStatus = 0;
 
 void setup() {
   tft.begin();
-  tft.fillScreen(BACKGROUND);
-  
-  
+  tft.fillScreen(BACKGROUND);  
 }
 
 void displayClear() {
@@ -75,14 +73,17 @@ void eyeRightReset() {
   tft.fillRect(X_MAX / 2, Y_MIN, X_MAX / 2, Y_MOUTH_START, BACKGROUND);
 }
 
-void eyeLeftNeutral() {
+void eyesSetup() {
+  tft.fillCircle(X_MAX - (EYES_DISTANCE_EDGES + EYES_SIZE), EYES_DISTANCE_EDGES + EYES_SIZE, EYES_SIZE, WHITE);
   tft.fillCircle(EYES_DISTANCE_EDGES + EYES_SIZE, EYES_DISTANCE_EDGES + EYES_SIZE, EYES_SIZE, WHITE);
+}
+
+void eyeLeftNeutral() {
   tft.fillCircle(EYES_DISTANCE_EDGES + EYES_SIZE, EYES_DISTANCE_EDGES + EYES_SIZE, eyesColorSize, eyesColor);
   tft.fillCircle(EYES_DISTANCE_EDGES + EYES_SIZE, EYES_DISTANCE_EDGES + EYES_SIZE, eyesPupilSize, BLACK);
 }
 
 void eyeRightNeutral() {
-  tft.fillCircle(X_MAX - (EYES_DISTANCE_EDGES + EYES_SIZE), EYES_DISTANCE_EDGES + EYES_SIZE, EYES_SIZE, WHITE);
   tft.fillCircle(X_MAX - (EYES_DISTANCE_EDGES + EYES_SIZE), EYES_DISTANCE_EDGES + EYES_SIZE, eyesColorSize, eyesColor);
   tft.fillCircle(X_MAX - (EYES_DISTANCE_EDGES + EYES_SIZE), EYES_DISTANCE_EDGES + EYES_SIZE, eyesPupilSize, BLACK);
 }
@@ -99,11 +100,32 @@ void eyeRightDrawStatus() {
   }
 }
 
-void eyesDrawStatus() {
-  eyeRightReset();
-  eyeLeftReset();
+
+
+void eyeRightLookAtSwitch() {
+  tft.fillCircle(X_MAX - (EYES_DISTANCE_EDGES + EYES_SIZE), EYES_DISTANCE_EDGES, eyesColorSize, eyesColor);
+  tft.fillCircle(X_MAX - (EYES_DISTANCE_EDGES + EYES_SIZE), EYES_DISTANCE_EDGES, eyesPupilSize, BLACK);
+
+}
+
+void eyeLeftLookAtSwitch() {
+  tft.fillCircle(EYES_DISTANCE_EDGES + EYES_SIZE, EYES_DISTANCE_EDGES, eyesColorSize, eyesColor);
+  tft.fillCircle(EYES_DISTANCE_EDGES + EYES_SIZE, EYES_DISTANCE_EDGES, eyesPupilSize, BLACK);
+}
+
+void eyesLookAtSwitch() {
+  eyeLeftLookAtSwitch();
+  eyeRightLookAtSwitch();
+}
+
+void eyesDrawStatus(int aStatus) {
+  eyesSetup();
   eyeLeftDrawStatus();
   eyeRightDrawStatus();
+}
+
+void eyesDrawStatus() {
+  eyeLeftDrawStatus();
 }
 
 void mouthDrawStatus(int aStatus) {
