@@ -1,8 +1,5 @@
-#include "Adafruit_GFX.h"
-#include "Adafruit_GC9A01A.h"
-#define TFT_DC 7
-#define TFT_CS 10
-Adafruit_GC9A01A tft(TFT_CS, TFT_DC);
+#include "defines.h"
+#include "eyes.ino"
 
 void mouthReset() {
   //Draw a Rectangle from start of mouth to end of display
@@ -28,4 +25,25 @@ void mouthPositive1() {
 void mouthPositive2() {
   tft.fillCircle(X_MAX / 2, Y_MAX * 0.625, X_MAX * 0.292, MOUTH_COLOR);
   tft.fillCircle(X_MAX / 2, Y_MAX / 2, X_MAX / 3, BACKGROUND);
+}
+
+void mouthDrawStatus(int aStatus) {
+  mouthReset();
+  switch (aStatus) {
+    case (0): mouthNeutral();
+    case (1): {
+        mouthPositive1();
+        eyesDrawStatus();
+      }
+    case (2): {
+        mouthPositive2();
+        eyesDrawStatus();
+      }
+
+  }
+}
+
+void mouthDrawStatus()
+{
+  mouthDrawStatus(mouthStatus);
 }
