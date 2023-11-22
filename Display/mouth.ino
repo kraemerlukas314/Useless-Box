@@ -1,5 +1,4 @@
 #include "defines.h"
-#include "eyes.ino"
 
 void mouthReset() {
   //Draw a Rectangle from start of mouth to end of display
