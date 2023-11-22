@@ -6,25 +6,21 @@
 // const int BLACK = 0x000000;
 // const int BACKGROUND = BLACK;
 
-void setup()
-{
+void setup() {
   Serial.begin(115200);
   tft.begin();
   tft.fillScreen(BACKGROUND);
   pinMode(PIN_BTN, INPUT_PULLUP);
 }
 
-void loop()
-{
+void loop() {
 }
 
-bool getButtonState()
-{
+bool getButtonState() {
   return digitalRead(PIN_BTN);
 }
 
-void displayClear()
-{
+void displayClear() {
   // Clear Display (Set display to background color)
   tft.fillScreen(BACKGROUND);
 }

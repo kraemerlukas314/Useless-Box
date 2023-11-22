@@ -39,11 +39,9 @@ void mouthDrawStatus(int aStatus) {
         mouthPositive2();
         eyesDrawStatus();
       }
-
   }
 }
 
-void mouthDrawStatus()
-{
+void mouthDrawStatus() {
   mouthDrawStatus(mouthStatus);
 }

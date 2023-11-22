@@ -35,12 +35,9 @@ void eyeRightDrawStatus() {
   }
 }
 
-
-
 void eyeRightLookAtSwitch() {
   tft.fillCircle(X_MAX - (EYES_DISTANCE_EDGES + EYES_SIZE), EYES_DISTANCE_EDGES, eyesColorSize, eyesColor);
   tft.fillCircle(X_MAX - (EYES_DISTANCE_EDGES + EYES_SIZE), EYES_DISTANCE_EDGES, eyesPupilSize, BLACK);
-
 }
 
 void eyeLeftLookAtSwitch() {
