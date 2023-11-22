@@ -1,23 +1,15 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_GC9A01A.h"
+#include "defines.h"
 #define TFT_DC 7
 #define TFT_CS 10
 
 // Hardware SPI on Feather or other boards
 Adafruit_GC9A01A tft(TFT_CS, TFT_DC);
-const int WHITE = 0xffffff;
-const int BLACK = 0x000000;
-const int BACKGROUND = BLACK;
-const int MOUTH_COLOR = WHITE;
-const int X_MIN = 0;
-const int Y_MIN = 0;
-const int X_MAX = 240;
-const int Y_MAX = 240;
-const int Y_MOUTH_START = Y_MAX / 2.2;
-const int MOUTH_THICKNESS = 20;
-const int MOUTH_MID = Y_MAX * 0.625;
-const int EYES_DISTANCE_EDGES = 40;
-const int EYES_SIZE = 30;
+//const int WHITE = 0xffffff;
+//const int BLACK = 0x000000;
+//const int BACKGROUND = BLACK;
+
 
 int eyesColor = 0x0066ff;
 int eyesColorSize = EYES_SIZE / 2;
@@ -26,12 +18,20 @@ int mouthStatus = 0;
 int eyeLeftStatus = 0;
 int eyeRightStatus = 0;
 
-
 void setup() {
+  Serial.begin(115200);
   tft.begin();
   tft.fillScreen(BACKGROUND);
-  
-  
+  eyesDrawStatus();
+  mouthDrawStatus();
+  pinMode(PIN_BTN, INPUT_PULLUP);
+}
+
+void loop() {
+}
+
+bool getButtonState() {
+  digitalRead(PIN_BTN);
 }
 
 void displayClear() {
@@ -111,14 +111,14 @@ void mouthDrawStatus(int aStatus) {
   switch (aStatus) {
     case (0): mouthNeutral();
     case (1): {
-      mouthPositive1();
-      eyesDrawStatus();
-    }
-    case(2): {
-      mouthPositive2();
-      eyesDrawStatus();
-    }
-    
+        mouthPositive1();
+        eyesDrawStatus();
+      }
+    case (2): {
+        mouthPositive2();
+        eyesDrawStatus();
+      }
+
   }
 }
 
@@ -129,8 +129,6 @@ void mouthDrawStatus() {
 
 
 
-void loop() {
-}
 
 
 
