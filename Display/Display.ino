@@ -1,8 +1,6 @@
 #include "defines.h"
 #include <EEPROM.h>
 
-
-
 // Hardware SPI on Feather or other boards
 // Adafruit_GC9A01A tft(TFT_CS, TFT_DC);
 // const int WHITE = 0xffffff;
@@ -21,12 +19,11 @@ uint32_t totalButtonPresses;
 
 void setup() {
   Serial.begin(115200);
+  pinMode(PIN_BTN, INPUT_PULLUP);
   totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16);  // get total button presses from EEPROM
   Serial.print("Total button presses read from EEPROM: ");
   Serial.println(totalButtonPresses);
-  tft.begin();
-  eyesDrawStatus();
-  
+  tft.begin();  
   // pinMode(PIN_BTN, INPUT_PULLUP);
   // displayClear();
   // eyesDrawStatus();
@@ -34,10 +31,29 @@ void setup() {
   // while (!getButtonState) {
   //   // ANZEIGE: Bitte Schalter umlegen
   // }
+  // displayClear();
+  // while (getButtonState) {
+  //   Serial.println("IN WHILE");
+  //   pinMode(13, OUTPUT);
+  //   digitalWrite(13, HIGH);
+  //   delay(5000);
+  //   // ANZEIGE: Bitte Schalter umlegen
+  //   tft.setTextColor(WHITE);
+
+  //   // Set text size
+  //   tft.setTextSize(2);
+
+  //   // Print "Hello, World!" at coordinates (10, 10)
+  //   tft.setCursor(10, 10);
+  //   tft.print("Hello, World!");
+  // }
   // ANZEIGE: Insgesamt wurde der Schalter totalButtonPresses mal umgelegt
   // ANZEIGE: Kalibrierung
-}
 
+  displayClear();
+  eyesDrawStatus();
+  mouthDrawStatus(0);
+}
 
 void loop() {
 }
