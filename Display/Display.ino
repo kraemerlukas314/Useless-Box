@@ -13,8 +13,11 @@ int eyesColor = 0x0066ff;
 int eyesColorSize = EYES_SIZE / 2;
 int eyesPupilSize = EYES_SIZE / 2.8;
 int mouthStatus = 0;
-int eyeLeftStatus = 0;
-int eyeRightStatus = 0;
+int eyesStatus = 0;
+int eyeLidStatus1 = 5;
+int eyeLidStatus2 = 5;
+int eyeLidStatus3 = 5;
+int eyeLidStatus4 = 5;
 uint32_t totalButtonPresses;
 
 void setup() {
@@ -23,11 +26,9 @@ void setup() {
   totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16);  // get total button presses from EEPROM
   Serial.print("Total button presses read from EEPROM: ");
   Serial.println(totalButtonPresses);
-  tft.begin();  
-  // pinMode(PIN_BTN, INPUT_PULLUP);
-  // displayClear();
-  // eyesDrawStatus();
-  // mouthDrawStatus();
+  tft.begin();
+  pinMode(PIN_BTN, INPUT_PULLUP);
+  displayClear();
   // while (!getButtonState) {
   //   // ANZEIGE: Bitte Schalter umlegen
   // }
@@ -45,14 +46,16 @@ void setup() {
 
   //   // Print "Hello, World!" at coordinates (10, 10)
   //   tft.setCursor(10, 10);
-  //   tft.print("Hello, World!");
+  //   tft.print(totalButtonPresses);
   // }
   // ANZEIGE: Insgesamt wurde der Schalter totalButtonPresses mal umgelegt
   // ANZEIGE: Kalibrierung
-
   displayClear();
   eyesDrawStatus();
-  mouthDrawStatus(0);
+  mouthDrawStatus();
+  eyeLidsUpDrawStatus();
+  delay(1000);
+  eyesBlink();
 }
 
 void loop() {

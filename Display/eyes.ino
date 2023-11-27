@@ -26,30 +26,22 @@ void eyeRightMiddle() {
 }
 
 // draw status
-void eyeLeftDrawStatus(int aStatus) {
-  switch (aStatus) {
-    case (0):
-      eyeLeftMiddle();
-  }
-}
-
-void eyeRightDrawStatus(int aStatus) {
-  switch (aStatus) {
-    case (0):
-      eyeRightMiddle();
-  }
-}
 
 void eyesDrawStatus(int aStatus) {
   eyesSetup();
-  eyeLeftDrawStatus(aStatus);
-  eyeRightDrawStatus(aStatus);
+  switch (aStatus) {
+    case (0):
+      eyesDrawAt(0, 0, 0, 0);
+    case (500):
+      // look at switch
+      eyesDrawAt(0.8, -0.8, -0.8, -0.8);
+    default: eyesDrawStatus(0);
+  }
+  eyeLidsUpDrawStatus();
 }
 
 void eyesDrawStatus() {
-  eyesSetup();
-  eyeLeftDrawStatus(eyeLeftStatus);
-  eyeRightDrawStatus(eyeRightStatus);
+  eyesDrawStatus(eyesStatus);
 }
 
 void eyeRightDrawAt(double x, double y) {
@@ -66,13 +58,7 @@ void eyesDrawAt(double xl, double yl, double xr, double yr) {
   eyesSetup();
   eyeLeftDrawAt(xl, yl);
   eyeRightDrawAt(xr, yr);
-}
-
-// eyes special positions
-// eyes look at switch
-
-void eyesLookAtSwitch() {
-  eyesDrawAt(0.8, -0.8, -0.8, -0.8);
+  eyeLidsUpDrawStatus();
 }
 
 // eyelids
@@ -86,7 +72,17 @@ void eyeLidRightUp(double leftHeight, double rightHeight) {
 }
 
 void eyeLidsUpDraw(double leftEyeLeftHeight, double leftEyeRightHeight, double rightEyeLeftHeight, double rightEyeRightHeight) {
-  eyesDrawStatus();
   eyeLidLeftUp(leftEyeLeftHeight, leftEyeRightHeight);
   eyeLidRightUp(rightEyeLeftHeight, rightEyeRightHeight);
+}
+
+void eyeLidsUpDrawStatus() {
+  eyeLidsUpDraw(eyeLidStatus1, eyeLidStatus2, eyeLidStatus3, eyeLidStatus4);
+}
+
+void eyesBlink() {
+  eyeLidsUpDraw(70, 70, 70, 70);
+  delay(300);
+  Serial.println("EyesBlink");
+  eyesDrawStatus();
 }
