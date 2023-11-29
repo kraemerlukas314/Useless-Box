@@ -20,7 +20,8 @@ int eyeLidStatus3 = 5;
 int eyeLidStatus4 = 5;
 uint32_t totalButtonPresses;
 
-void setup() {
+void setup()
+{
   // Serial.begin(115200);
   // pinMode(PIN_BTN, INPUT_PULLUP);
   // totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16);  // get total button presses from EEPROM
@@ -28,18 +29,18 @@ void setup() {
   // Serial.println(totalButtonPresses);
   tft.begin();
   pinMode(PIN_BTN, INPUT_PULLUP);
-  //displayClear();
-  // while (!getButtonState) {
-  //   // ANZEIGE: Bitte Schalter umlegen
-  // }
   // displayClear();
-  // while (getButtonState) {
-  //   Serial.println("IN WHILE");
-  //   pinMode(13, OUTPUT);
-  //   digitalWrite(13, HIGH);
-  //   delay(5000);
-  //   // ANZEIGE: Bitte Schalter umlegen
-  //   tft.setTextColor(WHITE);
+  //  while (!getButtonState) {
+  //    // ANZEIGE: Bitte Schalter umlegen
+  //  }
+  //  displayClear();
+  //  while (getButtonState) {
+  //    Serial.println("IN WHILE");
+  //    pinMode(13, OUTPUT);
+  //    digitalWrite(13, HIGH);
+  //    delay(5000);
+  //    // ANZEIGE: Bitte Schalter umlegen
+  //    tft.setTextColor(WHITE);
 
   //   // Set text size
   //   tft.setTextSize(2);
@@ -50,29 +51,36 @@ void setup() {
   // }
   // ANZEIGE: Insgesamt wurde der Schalter totalButtonPresses mal umgelegt
   // ANZEIGE: Kalibrierung
+  Serial.begin(115200);
+  Serial.println(EYE_LEFT_MIDDLE_X);
+  Serial.println(EYE_RIGHT_MIDDLE_X);
   displayClear();
   eyesDrawStatus();
   mouthDrawStatus();
-  eyeLidsUpDrawStatus();
-  //eyesBlink();
 }
 
-void loop() {
+void loop()
+{
+  eyesBlink();
+  delay(3000);
 }
 
-bool getButtonState() {
+bool getButtonState()
+{
   return digitalRead(PIN_BTN);
 }
 
 // increments the total button counter and writes result to EEPROM
-void incrementTotalButtonCounter() {
+void incrementTotalButtonCounter()
+{
   ++totalButtonPresses;
-  EEPROM.write(0, totalButtonPresses & 0xFF);          // Write the low byte
-  EEPROM.write(1, (totalButtonPresses >> 8) & 0xFF);   // Write the middle byte
-  EEPROM.write(2, (totalButtonPresses >> 16) & 0xFF);  // Write the high byte
+  EEPROM.write(0, totalButtonPresses & 0xFF);         // Write the low byte
+  EEPROM.write(1, (totalButtonPresses >> 8) & 0xFF);  // Write the middle byte
+  EEPROM.write(2, (totalButtonPresses >> 16) & 0xFF); // Write the high byte
 }
 
-void displayClear() {
+void displayClear()
+{
   // Clear Display (Set display to background color)
   tft.fillScreen(BACKGROUND);
 }
