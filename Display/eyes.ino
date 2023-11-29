@@ -29,12 +29,21 @@ void eyeRightMiddle() {
 
 void eyesDrawStatus(int aStatus) {
   switch (aStatus) {
-    case (0):
-      eyesDrawAt(0, 0, 0, 0);
-    case (500):
-      // look at switch
-      eyesDrawAt(0.8, -0.8, -0.8, -0.8);
-    default: eyesDrawStatus(0);
+    case (0): {
+        eyesDrawAt(0, 0, 0, 0);
+        break;
+      }
+    case (500): {
+        // look at switch
+        eyesDrawAt(0.8, -0.8, -0.8, -0.8);
+        break;
+      }
+    default: {
+        eyesDrawStatus(0);
+        break;
+      }
+
+
   }
 }
 

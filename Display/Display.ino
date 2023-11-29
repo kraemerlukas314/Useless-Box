@@ -28,7 +28,7 @@ void setup() {
   // Serial.println(totalButtonPresses);
   tft.begin();
   pinMode(PIN_BTN, INPUT_PULLUP);
-  displayClear();
+  //displayClear();
   // while (!getButtonState) {
   //   // ANZEIGE: Bitte Schalter umlegen
   // }
@@ -50,16 +50,10 @@ void setup() {
   // }
   // ANZEIGE: Insgesamt wurde der Schalter totalButtonPresses mal umgelegt
   // ANZEIGE: Kalibrierung
-  Serial.begin(115200);
   displayClear();
-  Serial.println("Display Clear");
   eyesDrawStatus();
-  Serial.println("eyesDrawStatus");
   mouthDrawStatus();
-  Serial.println("mouthDrawStatus");
   eyeLidsUpDrawStatus();
-  Serial.println("eyeLids Draw");
-  delay(1000);
   //eyesBlink();
 }
 
