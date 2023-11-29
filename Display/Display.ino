@@ -28,7 +28,8 @@ void setup()
   totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16); // get total button presses from EEPROM
   Serial.print("Total button presses read from EEPROM: ");
   Serial.println(totalButtonPresses);
-  tft.begin();
+  tft.begin()
+  ;
   displayClear();
   while (!getButtonState())
   {
@@ -43,8 +44,7 @@ void setup()
     tft.print("umlegen");
   }
   displayClear();
-  while (getButtonState())
-  {
+  while (getButtonState()) {
     // ANZEIGE: Kalibriere...
     tft.setTextColor(WHITE);
     tft.setTextSize(2);
@@ -52,17 +52,17 @@ void setup()
     tft.print("Kalibriere...");
     // ANZEIGE: wie oft wurde Schalter umgelegt?
     tft.setTextSize(2);
-    tft.setCursor(10, 100);
-    tft.print("Schaltercoutner:");
-    tft.begin();
-    pinMode(PIN_BTN, INPUT_PULLUP);
+    tft.setCursor(25, 100);
+    tft.print("Schaltercounter:");
 
-    tft.setTextSize(5);
+    tft.setTextSize(6);
     tft.setCursor(30, 160);
 
     // falls Zähler kleiner 99999 ist, werden die Stellen davor mit Nullen aufgefüllt
-    String formattedString = String(totalButtonPresses, DEC);
-    formattedString = formattedString.length() < 5 ? "00000" + formattedString : formattedString;
+    String formattedString = String(totalButtonPresses);
+    while (formattedString.length() < 5) {
+      formattedString = "0" + formattedString;
+    }
     tft.print(formattedString);
   }
   displayClear();
