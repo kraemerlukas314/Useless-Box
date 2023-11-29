@@ -21,35 +21,44 @@ int eyeLidStatus4 = 5;
 uint32_t totalButtonPresses;
 
 void setup() {
-  // Serial.begin(115200);
-  // pinMode(PIN_BTN, INPUT_PULLUP);
-  // totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16);  // get total button presses from EEPROM
-  // Serial.print("Total button presses read from EEPROM: ");
-  // Serial.println(totalButtonPresses);
-  tft.begin();
+  Serial.begin(115200);
   pinMode(PIN_BTN, INPUT_PULLUP);
-  //displayClear();
-  // while (!getButtonState) {
-  //   // ANZEIGE: Bitte Schalter umlegen
-  // }
-  // displayClear();
-  // while (getButtonState) {
-  //   Serial.println("IN WHILE");
-  //   pinMode(13, OUTPUT);
-  //   digitalWrite(13, HIGH);
-  //   delay(5000);
-  //   // ANZEIGE: Bitte Schalter umlegen
-  //   tft.setTextColor(WHITE);
+  totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16);  // get total button presses from EEPROM
+  Serial.print("Total button presses read from EEPROM: ");
+  Serial.println(totalButtonPresses);
+  tft.begin();
+  displayClear();
+  while (!getButtonState()) {
+    // ANZEIGE: Bitte Schalter umlegen
+    tft.setTextColor(WHITE);
+    tft.setTextSize(4);
+    tft.setCursor(60, 50);
+    tft.print("Bitte");
+    tft.setCursor(28, 100);
+    tft.print("Schalter");
+    tft.setCursor(38, 150);
+    tft.print("umlegen");
+  }
+  displayClear();
+  while (getButtonState()) {
+    // ANZEIGE: Kalibriere...
+    tft.setTextColor(WHITE);
+    tft.setTextSize(2);
+    tft.setCursor(50, 50);
+    tft.print("Kalibriere...");
+    // ANZEIGE: wie oft wurde Schalter umgelegt?
+    tft.setTextSize(2);
+    tft.setCursor(10, 100);
+    tft.print("Schaltercoutner:");
 
-  //   // Set text size
-  //   tft.setTextSize(2);
+    tft.setTextSize(5);
+    tft.setCursor(30, 160);
 
-  //   // Print "Hello, World!" at coordinates (10, 10)
-  //   tft.setCursor(10, 10);
-  //   tft.print(totalButtonPresses);
-  // }
-  // ANZEIGE: Insgesamt wurde der Schalter totalButtonPresses mal umgelegt
-  // ANZEIGE: Kalibrierung
+    // falls Zähler kleiner 99999 ist, werden die Stellen davor mit Nullen aufgefüllt
+    String formattedString = String(totalButtonPresses, DEC);
+    formattedString = formattedString.length() < 5 ? "00000" + formattedString : formattedString;
+    tft.print(formattedString);
+  }
   displayClear();
   eyesDrawStatus();
   mouthDrawStatus();
