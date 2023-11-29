@@ -18,7 +18,7 @@ int eyeLidStatus1 = 5;
 int eyeLidStatus2 = 5;
 int eyeLidStatus3 = 5;
 int eyeLidStatus4 = 5;
-int happyness = 1000;
+int happyness = random(1000);
 uint32_t totalButtonPresses;
 
 void setup()
@@ -62,14 +62,12 @@ void setup()
 
 void loop()
 {
-  if (getButtonState())
-  {
-    happyness--;
-  }
-  else
+  if (!getButtonState && happyness < 5000)
   {
     happyness++;
   }
+  Serial.println(happyness);
+  delay(1000);
 }
 
 bool getButtonState()
