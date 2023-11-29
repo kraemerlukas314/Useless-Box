@@ -18,8 +18,10 @@ int eyeLidStatus1 = 5;
 int eyeLidStatus2 = 5;
 int eyeLidStatus3 = 5;
 int eyeLidStatus4 = 5;
+int happyness = random(1000);
 uint32_t totalButtonPresses;
 
+<<<<<<< HEAD
 void setup() {
   Serial.begin(115200);
   pinMode(PIN_BTN, INPUT_PULLUP);
@@ -50,38 +52,81 @@ void setup() {
     tft.setTextSize(2);
     tft.setCursor(10, 100);
     tft.print("Schaltercoutner:");
+=======
+void setup()
+{
+  // Serial.begin(115200);
+  // pinMode(PIN_BTN, INPUT_PULLUP);
+  // totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16);  // get total button presses from EEPROM
+  // Serial.print("Total button presses read from EEPROM: ");
+  // Serial.println(totalButtonPresses);
+  tft.begin();
+  pinMode(PIN_BTN, INPUT_PULLUP);
+  // displayClear();
+  //  while (!getButtonState) {
+  //    // ANZEIGE: Bitte Schalter umlegen
+  //  }
+  //  displayClear();
+  //  while (getButtonState) {
+  //    Serial.println("IN WHILE");
+  //    pinMode(13, OUTPUT);
+  //    digitalWrite(13, HIGH);
+  //    delay(5000);
+  //    // ANZEIGE: Bitte Schalter umlegen
+  //    tft.setTextColor(WHITE);
+>>>>>>> 52ea7686b798f091904cba4317afcb3129054f34
 
     tft.setTextSize(5);
     tft.setCursor(30, 160);
 
+<<<<<<< HEAD
     // falls Zähler kleiner 99999 ist, werden die Stellen davor mit Nullen aufgefüllt
     String formattedString = String(totalButtonPresses, DEC);
     formattedString = formattedString.length() < 5 ? "00000" + formattedString : formattedString;
     tft.print(formattedString);
   }
+=======
+  //   // Print "Hello, World!" at coordinates (10, 10)
+  //   tft.setCursor(10, 10);
+  //   tft.print(totalButtonPresses);
+  // }
+  // ANZEIGE: Insgesamt wurde der Schalter totalButtonPresses mal umgelegt
+  // ANZEIGE: Kalibrierung
+  Serial.begin(115200);
+  Serial.println(EYE_LEFT_MIDDLE_X);
+  Serial.println(EYE_RIGHT_MIDDLE_X);
+>>>>>>> 52ea7686b798f091904cba4317afcb3129054f34
   displayClear();
-  eyesDrawStatus();
   mouthDrawStatus();
-  eyeLidsUpDrawStatus();
-  //eyesBlink();
+  eyesDrawStatus();
 }
 
-void loop() {
+void loop()
+{
+  if (!getButtonState && happyness < 5000)
+  {
+    happyness++;
+  }
+  Serial.println(happyness);
+  delay(1000);
 }
 
-bool getButtonState() {
+bool getButtonState()
+{
   return digitalRead(PIN_BTN);
 }
 
 // increments the total button counter and writes result to EEPROM
-void incrementTotalButtonCounter() {
+void incrementTotalButtonCounter()
+{
   ++totalButtonPresses;
-  EEPROM.write(0, totalButtonPresses & 0xFF);          // Write the low byte
-  EEPROM.write(1, (totalButtonPresses >> 8) & 0xFF);   // Write the middle byte
-  EEPROM.write(2, (totalButtonPresses >> 16) & 0xFF);  // Write the high byte
+  EEPROM.write(0, totalButtonPresses & 0xFF);         // Write the low byte
+  EEPROM.write(1, (totalButtonPresses >> 8) & 0xFF);  // Write the middle byte
+  EEPROM.write(2, (totalButtonPresses >> 16) & 0xFF); // Write the high byte
 }
 
-void displayClear() {
+void displayClear()
+{
   // Clear Display (Set display to background color)
   tft.fillScreen(BACKGROUND);
 }
