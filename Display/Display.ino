@@ -18,6 +18,7 @@ int eyeLidStatus1 = 5;
 int eyeLidStatus2 = 5;
 int eyeLidStatus3 = 5;
 int eyeLidStatus4 = 5;
+int happyness = 1000;
 uint32_t totalButtonPresses;
 
 void setup()
@@ -55,14 +56,20 @@ void setup()
   Serial.println(EYE_LEFT_MIDDLE_X);
   Serial.println(EYE_RIGHT_MIDDLE_X);
   displayClear();
-  eyesDrawStatus();
   mouthDrawStatus();
+  eyesDrawStatus();
 }
 
 void loop()
 {
-  eyesBlink();
-  delay(3000);
+  if (getButtonState())
+  {
+    happyness--;
+  }
+  else
+  {
+    happyness++;
+  }
 }
 
 bool getButtonState()
