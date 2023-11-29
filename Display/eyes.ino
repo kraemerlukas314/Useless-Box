@@ -28,7 +28,6 @@ void eyeRightMiddle() {
 // draw status
 
 void eyesDrawStatus(int aStatus) {
-  eyesSetup();
   switch (aStatus) {
     case (0):
       eyesDrawAt(0, 0, 0, 0);
@@ -37,7 +36,6 @@ void eyesDrawStatus(int aStatus) {
       eyesDrawAt(0.8, -0.8, -0.8, -0.8);
     default: eyesDrawStatus(0);
   }
-  eyeLidsUpDrawStatus();
 }
 
 void eyesDrawStatus() {
@@ -83,6 +81,5 @@ void eyeLidsUpDrawStatus() {
 void eyesBlink() {
   eyeLidsUpDraw(70, 70, 70, 70);
   delay(300);
-  Serial.println("EyesBlink");
   eyesDrawStatus();
 }

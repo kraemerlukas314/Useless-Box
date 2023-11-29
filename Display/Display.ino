@@ -21,11 +21,11 @@ int eyeLidStatus4 = 5;
 uint32_t totalButtonPresses;
 
 void setup() {
-  Serial.begin(115200);
-  pinMode(PIN_BTN, INPUT_PULLUP);
-  totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16);  // get total button presses from EEPROM
-  Serial.print("Total button presses read from EEPROM: ");
-  Serial.println(totalButtonPresses);
+  // Serial.begin(115200);
+  // pinMode(PIN_BTN, INPUT_PULLUP);
+  // totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16);  // get total button presses from EEPROM
+  // Serial.print("Total button presses read from EEPROM: ");
+  // Serial.println(totalButtonPresses);
   tft.begin();
   pinMode(PIN_BTN, INPUT_PULLUP);
   displayClear();
@@ -50,12 +50,17 @@ void setup() {
   // }
   // ANZEIGE: Insgesamt wurde der Schalter totalButtonPresses mal umgelegt
   // ANZEIGE: Kalibrierung
+  Serial.begin(115200);
   displayClear();
+  Serial.println("Display Clear");
   eyesDrawStatus();
+  Serial.println("eyesDrawStatus");
   mouthDrawStatus();
+  Serial.println("mouthDrawStatus");
   eyeLidsUpDrawStatus();
+  Serial.println("eyeLids Draw");
   delay(1000);
-  eyesBlink();
+  //eyesBlink();
 }
 
 void loop() {
