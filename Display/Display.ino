@@ -18,66 +18,73 @@ int eyeLidStatus1 = 5;
 int eyeLidStatus2 = 5;
 int eyeLidStatus3 = 5;
 int eyeLidStatus4 = 5;
-int happyness = random(1000);
+long timeLast = millis();
+int happiness = random(1000);
 uint32_t totalButtonPresses;
 
 void setup()
 {
   Serial.begin(115200);
-  pinMode(PIN_BTN, INPUT_PULLUP);
-  totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16); // get total button presses from EEPROM
-  Serial.print("Total button presses read from EEPROM: ");
-  Serial.println(totalButtonPresses);
-  tft.begin();
-  displayClear();
-  while (!getButtonState())
-  {
-    // ANZEIGE: Bitte Schalter umlegen
-    tft.setTextColor(WHITE);
-    tft.setTextSize(4);
-    tft.setCursor(60, 50);
-    tft.print("Bitte");
-    tft.setCursor(28, 100);
-    tft.print("Schalter");
-    tft.setCursor(38, 150);
-    tft.print("umlegen");
-  }
-  displayClear();
-  while (getButtonState())
-  {
-    // ANZEIGE: Kalibriere...
-    tft.setTextColor(WHITE);
-    tft.setTextSize(2);
-    tft.setCursor(50, 50);
-    tft.print("Kalibriere...");
-    // ANZEIGE: wie oft wurde Schalter umgelegt?
-    tft.setTextSize(2);
-    tft.setCursor(10, 100);
-    tft.print("Schaltercoutner:");
-    tft.begin();
-    pinMode(PIN_BTN, INPUT_PULLUP);
+  // pinMode(PIN_BTN, INPUT_PULLUP);
+  // totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16); // get total button presses from EEPROM
+  // Serial.print("Total button presses read from EEPROM: ");
+  // Serial.println(totalButtonPresses);
+  // tft.begin();
+  // displayClear();
+  // while (!getButtonState())
+  // {
+  //   // ANZEIGE: Bitte Schalter umlegen
+  //   tft.setTextColor(WHITE);
+  //   tft.setTextSize(4);
+  //   tft.setCursor(60, 50);
+  //   tft.print("Bitte");
+  //   tft.setCursor(28, 100);
+  //   tft.print("Schalter");
+  //   tft.setCursor(38, 150);
+  //   tft.print("umlegen");
+  // }
+  // displayClear();
+  // while (getButtonState())
+  // {
+  //   // ANZEIGE: Kalibriere...
+  //   tft.setTextColor(WHITE);
+  //   tft.setTextSize(2);
+  //   tft.setCursor(50, 50);
+  //   tft.print("Kalibriere...");
+  //   // ANZEIGE: wie oft wurde Schalter umgelegt?
+  //   tft.setTextSize(2);
+  //   tft.setCursor(10, 100);
+  //   tft.print("Schaltercoutner:");
+  //   tft.begin();
+  //   pinMode(PIN_BTN, INPUT_PULLUP);
 
-    tft.setTextSize(5);
-    tft.setCursor(30, 160);
+  //   tft.setTextSize(5);
+  //   tft.setCursor(30, 160);
 
-    // falls Zähler kleiner 99999 ist, werden die Stellen davor mit Nullen aufgefüllt
-    String formattedString = String(totalButtonPresses, DEC);
-    formattedString = formattedString.length() < 5 ? "00000" + formattedString : formattedString;
-    tft.print(formattedString);
-  }
-  displayClear();
-  mouthDrawStatus();
-  eyesDrawStatus();
+  //   // falls Zähler kleiner 99999 ist, werden die Stellen davor mit Nullen aufgefüllt
+  //   String formattedString = String(totalButtonPresses, DEC);
+  //   formattedString = formattedString.length() < 5 ? "00000" + formattedString : formattedString;
+  //   tft.print(formattedString);
+  // }
+  // displayClear();
+  // mouthDrawStatus();
+  // eyesDrawStatus();
 }
 
 void loop()
 {
-  if (!getButtonState && happyness < 5000)
+  while (millis() - timeLast < intervall)
   {
-    happyness++;
+    Serial.println("in while: " + String(timeLast) + ", " + String(millis()));
+    delay(1);
   }
-  Serial.println(happyness);
-  delay(1000);
+  Serial.println("not in while: " + String(timeLast) + ", " + String(millis()));
+  timeLast = millis();
+  if (!getButtonState() && happiness < 5000)
+  {
+    happiness++;
+  }
+  // Serial.println("Happiness: " + String(happiness));
 }
 
 bool getButtonState()
