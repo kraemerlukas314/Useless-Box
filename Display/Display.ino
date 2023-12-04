@@ -20,102 +20,36 @@ int eyeLidStatus3 = 5;
 int eyeLidStatus4 = 5;
 long timeLast = millis();
 int happiness = random(1000);
-uint32_t totalButtonPresses;
+uint32_t totalButtonPresses = 0;
 
 void setup()
 {
   Serial.begin(115200);
-<<<<<<< HEAD
-  // pinMode(PIN_BTN, INPUT_PULLUP);
-  // totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16); // get total button presses from EEPROM
-  // Serial.print("Total button presses read from EEPROM: ");
-  // Serial.println(totalButtonPresses);
-  // tft.begin();
-  // displayClear();
-  // while (!getButtonState())
-  // {
-  //   // ANZEIGE: Bitte Schalter umlegen
-  //   tft.setTextColor(WHITE);
-  //   tft.setTextSize(4);
-  //   tft.setCursor(60, 50);
-  //   tft.print("Bitte");
-  //   tft.setCursor(28, 100);
-  //   tft.print("Schalter");
-  //   tft.setCursor(38, 150);
-  //   tft.print("umlegen");
-  // }
-  // displayClear();
-  // while (getButtonState())
-  // {
-  //   // ANZEIGE: Kalibriere...
-  //   tft.setTextColor(WHITE);
-  //   tft.setTextSize(2);
-  //   tft.setCursor(50, 50);
-  //   tft.print("Kalibriere...");
-  //   // ANZEIGE: wie oft wurde Schalter umgelegt?
-  //   tft.setTextSize(2);
-  //   tft.setCursor(10, 100);
-  //   tft.print("Schaltercoutner:");
-  //   tft.begin();
-  //   pinMode(PIN_BTN, INPUT_PULLUP);
-
-  //   tft.setTextSize(5);
-  //   tft.setCursor(30, 160);
-
-  //   // falls Zähler kleiner 99999 ist, werden die Stellen davor mit Nullen aufgefüllt
-  //   String formattedString = String(totalButtonPresses, DEC);
-  //   formattedString = formattedString.length() < 5 ? "00000" + formattedString : formattedString;
-  //   tft.print(formattedString);
-  // }
-  // displayClear();
-  // mouthDrawStatus();
-  // eyesDrawStatus();
-=======
+  delay(100); // is needed so Arduino does not write to eeprom twice
+  totalButtonPresses = EEPROMReadlong(0);
+  incrementTotalButtonCounter();
   pinMode(PIN_BTN, INPUT_PULLUP);
-  totalButtonPresses = EEPROM.read(0) | (EEPROM.read(1) << 8) | (EEPROM.read(2) << 16); // get total button presses from EEPROM
   Serial.print("Total button presses read from EEPROM: ");
   Serial.println(totalButtonPresses);
-  tft.begin()
-  ;
+  tft.begin();
   displayClear();
-  while (!getButtonState())
-  {
-    // ANZEIGE: Bitte Schalter umlegen
-    tft.setTextColor(WHITE);
-    tft.setTextSize(4);
-    tft.setCursor(60, 50);
-    tft.print("Bitte");
-    tft.setCursor(28, 100);
-    tft.print("Schalter");
-    tft.setCursor(38, 150);
-    tft.print("umlegen");
+  // falls Zähler kleiner 99999 ist, werden die Stellen davor mit Nullen aufgefüllt
+  String formattedString = String(totalButtonPresses);
+  while (formattedString.length() < 6) {
+    formattedString = "0" + formattedString;
   }
-  displayClear();
+  tft.setTextSize(5);
+  tft.setCursor(20, 95);
+  tft.print(formattedString);
+  while (!getButtonState()) {
+  }
+  // Calibrate servo position
   while (getButtonState()) {
-    // ANZEIGE: Kalibriere...
-    tft.setTextColor(WHITE);
-    tft.setTextSize(2);
-    tft.setCursor(50, 50);
-    tft.print("Kalibriere...");
-    // ANZEIGE: wie oft wurde Schalter umgelegt?
-    tft.setTextSize(2);
-    tft.setCursor(25, 100);
-    tft.print("Schaltercounter:");
-
-    tft.setTextSize(6);
-    tft.setCursor(30, 160);
-
-    // falls Zähler kleiner 99999 ist, werden die Stellen davor mit Nullen aufgefüllt
-    String formattedString = String(totalButtonPresses);
-    while (formattedString.length() < 5) {
-      formattedString = "0" + formattedString;
-    }
-    tft.print(formattedString);
   }
+
   displayClear();
   mouthDrawStatus();
   eyesDrawStatus();
->>>>>>> 786b641d6eecd01e8a6914c37cfd16023ca1c8a5
 }
 
 void loop()
@@ -143,9 +77,29 @@ bool getButtonState()
 void incrementTotalButtonCounter()
 {
   ++totalButtonPresses;
-  EEPROM.write(0, totalButtonPresses & 0xFF);         // Write the low byte
-  EEPROM.write(1, (totalButtonPresses >> 8) & 0xFF);  // Write the middle byte
-  EEPROM.write(2, (totalButtonPresses >> 16) & 0xFF); // Write the high byte
+  EEPROMWritelong(0, totalButtonPresses);
+  //EEPROMWritelong(0, 0);
+}
+
+long EEPROMReadlong(long address) {
+  long four = EEPROM.read(address);
+  long three = EEPROM.read(address + 1);
+  long two = EEPROM.read(address + 2);
+  long one = EEPROM.read(address + 3);
+
+  return ((four << 0) & 0xFF) + ((three << 8) & 0xFFFF) + ((two << 16) & 0xFFFFFF) + ((one << 24) & 0xFFFFFFFF);
+}
+
+void EEPROMWritelong(int address, long value) {
+  byte four = (value & 0xFF);
+  byte three = ((value >> 8) & 0xFF);
+  byte two = ((value >> 16) & 0xFF);
+  byte one = ((value >> 24) & 0xFF);
+
+  EEPROM.write(address, four);
+  EEPROM.write(address + 1, three);
+  EEPROM.write(address + 2, two);
+  EEPROM.write(address + 3, one);
 }
 
 void displayClear()
