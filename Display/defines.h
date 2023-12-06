@@ -1,9 +1,12 @@
 // include libraries
 #include "Adafruit_GFX.h"
 #include "Adafruit_GC9A01A.h"
+#include <EEPROM.h>
+#include <Servo.h>
 
 // pin defines
 #define PIN_BTN 2
+#define PIN_SERVO A2
 
 #define TFT_DC 7
 #define TFT_CS 10

@@ -1,5 +1,4 @@
 #include "defines.h"
-#include <EEPROM.h>
 
 // Hardware SPI on Feather or other boards
 // Adafruit_GC9A01A tft(TFT_CS, TFT_DC);
@@ -8,6 +7,8 @@
 // const int BACKGROUND = BLACK;
 
 Adafruit_GC9A01A tft(TFT_CS, TFT_DC);
+
+Servo servo;
 
 int eyesColor = 0x0066ff;
 int eyesColorSize = EYES_SIZE / 2;
@@ -21,13 +22,18 @@ int blinker = 0;
 int blinkTimer = random(3, 10);
 byte servoPosSwitch = 0;
 byte servoPosHome = 0;
+byte servoPosCurrent = 0;
 uint32_t totalButtonPresses = 0;
 
 void setup()
 {
   Serial.begin(115200);
-  totalButtonPresses = EEPROMReadlong(0);
   pinMode(PIN_BTN, INPUT_PULLUP);
+  servo.attach(PIN_SERVO);
+  servo.write(180);
+  servoPosCurrent = 180;
+  delay(1000);
+  totalButtonPresses = EEPROMReadlong(0);
   Serial.print("Total button presses read from EEPROM: ");
   Serial.println(totalButtonPresses);
   tft.begin();
@@ -45,10 +51,17 @@ void setup()
   {
   }
   // Calibrate servo position
-  while (getButtonState())
+  while (getButtonState() && servoPosCurrent > 0)
   {
+    servoPosCurrent = servoPosCurrent - 1;
+    servo.write(servoPosCurrent);
+    Serial.println(servoPosCurrent);
+    delay(15);
   }
-
+  Serial.print("Final Servo pos: ");
+  Serial.println(servoPosCurrent);
+  delay(1000);
+  exit(0);
   displayClear();
   mouthDrawStatus();
   eyesDrawStatus();
@@ -94,7 +107,14 @@ void loop()
 
 bool getButtonState()
 {
-  return digitalRead(PIN_BTN);
+  static int lastButtonState = HIGH, buttonState;
+  static unsigned long lastDebounceTime;
+
+  buttonState = digitalRead(PIN_BTN);
+  if (buttonState != lastButtonState)
+    lastDebounceTime = millis();
+
+  return (millis() - lastDebounceTime) > 50 ? lastButtonState = buttonState : !lastButtonState;
 }
 
 // increments the total button counter and writes result to EEPROM
