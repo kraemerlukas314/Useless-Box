@@ -20,14 +20,13 @@ int eyeLidStatus3 = 5;
 int eyeLidStatus4 = 5;
 long timeLast = millis();
 int happiness = random(1000);
+byte servoPosSwitch = 0;
+byte servoPosHome = 0;
 uint32_t totalButtonPresses = 0;
 
-void setup()
-{
+void setup() {
   Serial.begin(115200);
-  delay(100); // is needed so Arduino does not write to eeprom twice
   totalButtonPresses = EEPROMReadlong(0);
-  incrementTotalButtonCounter();
   pinMode(PIN_BTN, INPUT_PULLUP);
   Serial.print("Total button presses read from EEPROM: ");
   Serial.println(totalButtonPresses);
@@ -38,8 +37,8 @@ void setup()
   while (formattedString.length() < 6) {
     formattedString = "0" + formattedString;
   }
-  tft.setTextSize(5);
-  tft.setCursor(20, 95);
+  tft.setTextSize(6);
+  tft.setCursor(16, 95);
   tft.print(formattedString);
   while (!getButtonState()) {
   }
@@ -52,17 +51,14 @@ void setup()
   eyesDrawStatus();
 }
 
-void loop()
-{
-  while (millis() - timeLast < intervall)
-  {
+void loop() {
+  while (millis() - timeLast < intervall) {
     Serial.println("in while: " + String(timeLast) + ", " + String(millis()));
     delay(1);
   }
   Serial.println("not in while: " + String(timeLast) + ", " + String(millis()));
   timeLast = millis();
-  if (!getButtonState() && happiness < 5000)
-  {
+  if (!getButtonState() && happiness < 5000) {
     happiness++;
   }
   // Serial.println("Happiness: " + String(happiness));
