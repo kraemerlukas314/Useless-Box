@@ -15,18 +15,18 @@ int eyesColorSize = EYES_SIZE / 2;
 int eyesPupilSize = EYES_SIZE / 2.8;
 int mouthStatus = 0;
 int eyesStatus = 0;
-int eyeLidStatus1 = 5;
-int eyeLidStatus2 = 5;
-int eyeLidStatus3 = 5;
-int eyeLidStatus4 = 5;
+double eyeLidsStatus[4] = {3, 3, 3, 3};
 long timeLast = millis();
 int happiness = random(1000);
+int blinker = 0;
+int blinkTimer = random(3, 10);
 byte servoPosSwitch = 0;
 byte servoPosHome = 0;
 byte servoPosCurrent = 0;
 uint32_t totalButtonPresses = 0;
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   pinMode(PIN_BTN, INPUT_PULLUP);
   servo.attach(PIN_SERVO);
@@ -40,16 +40,19 @@ void setup() {
   displayClear();
   // falls Zähler kleiner 99999 ist, werden die Stellen davor mit Nullen aufgefüllt
   String formattedString = String(totalButtonPresses);
-  while (formattedString.length() < 6) {
+  while (formattedString.length() < 6)
+  {
     formattedString = "0" + formattedString;
   }
   tft.setTextSize(6);
   tft.setCursor(16, 95);
   tft.print(formattedString);
-  while (!getButtonState()) {
+  while (!getButtonState())
+  {
   }
   // Calibrate servo position
-  while (getButtonState() && servoPosCurrent > 0) {
+  while (getButtonState() && servoPosCurrent > 0)
+  {
     servoPosCurrent = servoPosCurrent - 1;
     servo.write(servoPosCurrent);
     Serial.println(servoPosCurrent);
@@ -64,26 +67,53 @@ void setup() {
   eyesDrawStatus();
 }
 
-void loop() {
-  while (millis() - timeLast < intervall) {
-    Serial.println("in while: " + String(timeLast) + ", " + String(millis()));
+void loop()
+{
+  while (millis() - timeLast < intervall)
+  {
     delay(1);
   }
-  Serial.println("not in while: " + String(timeLast) + ", " + String(millis()));
   timeLast = millis();
-  if (!getButtonState() && happiness < 5000) {
+
+  // increase happiness
+  if (!getButtonState() && happiness < 5000)
+  {
     happiness++;
   }
-  // Serial.println("Happiness: " + String(happiness));
+
+  // Blinking
+  if (blinker <= 0)
+  {
+    eyesBlink();
+    blinker = blinkTimer;
+  }
+  else
+  {
+    --blinker;
+  }
+
+  // button has been pressed
+  if (getButtonState())
+  {
+    happiness -= dissatisfaction;
+    useSwitch();
+  }
+
+  // Draw / update everything
+  mouthDrawStatus();
+  eyesDrawStatus();
+  eyeLidsUpDrawStatus();
 }
 
-bool getButtonState() {
+bool getButtonState()
+{
   static int lastButtonState = HIGH, buttonState;
   static unsigned long lastDebounceTime;
 
   buttonState = digitalRead(PIN_BTN);
-  if (buttonState != lastButtonState) lastDebounceTime = millis();
-  
+  if (buttonState != lastButtonState)
+    lastDebounceTime = millis();
+
   return (millis() - lastDebounceTime) > 50 ? lastButtonState = buttonState : !lastButtonState;
 }
 
@@ -92,10 +122,11 @@ void incrementTotalButtonCounter()
 {
   ++totalButtonPresses;
   EEPROMWritelong(0, totalButtonPresses);
-  //EEPROMWritelong(0, 0);
+  // EEPROMWritelong(0, 0);
 }
 
-long EEPROMReadlong(long address) {
+long EEPROMReadlong(long address)
+{
   long four = EEPROM.read(address);
   long three = EEPROM.read(address + 1);
   long two = EEPROM.read(address + 2);
@@ -104,7 +135,8 @@ long EEPROMReadlong(long address) {
   return ((four << 0) & 0xFF) + ((three << 8) & 0xFFFF) + ((two << 16) & 0xFFFFFF) + ((one << 24) & 0xFFFFFFFF);
 }
 
-void EEPROMWritelong(int address, long value) {
+void EEPROMWritelong(int address, long value)
+{
   byte four = (value & 0xFF);
   byte three = ((value >> 8) & 0xFF);
   byte two = ((value >> 16) & 0xFF);

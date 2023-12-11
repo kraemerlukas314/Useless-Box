@@ -29,4 +29,9 @@
 #define EYE_LEFT_MIDDLE_Y EYES_DISTANCE_EDGES + EYES_SIZE
 #define EYE_RIGHT_MIDDLE_X (X_MAX - (EYES_DISTANCE_EDGES + EYES_SIZE))
 #define EYE_RIGHT_MIDDLE_Y EYES_DISTANCE_EDGES + EYES_SIZE
-#define intervall 10000
+#define intervall 1000
+#define dissatisfaction 100
+#define eyeLidsStandard \
+    {                   \
+        3, 3, 3, 3      \
+    }

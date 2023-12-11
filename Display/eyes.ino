@@ -100,7 +100,7 @@ void eyeLidsUpDraw(double leftEyeLeftHeight, double leftEyeRightHeight, double r
 
 void eyeLidsUpDrawStatus()
 {
-  eyeLidsUpDraw(eyeLidStatus1, eyeLidStatus2, eyeLidStatus3, eyeLidStatus4);
+  eyeLidsUpDraw(eyeLidsStatus[0], eyeLidsStatus[1], eyeLidsStatus[2], eyeLidsStatus[3]);
 }
 
 void eyesBlink()
