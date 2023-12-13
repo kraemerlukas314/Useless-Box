@@ -14,8 +14,11 @@ int eyesColor = 0x0066ff;
 int eyesColorSize = EYES_SIZE / 2;
 int eyesPupilSize = EYES_SIZE / 2.8;
 int mouthStatus = 0;
+int mouthStatusOld = -1;
 int eyesStatus = 0;
+int eyesStatusOld = -10000;
 double eyeLidsStatus[4] = {3, 3, 3, 3};
+double eyeLidsStatusOld[4] = {-1, -1, -1, -1};
 long timeLast = millis();
 int happiness = random(1000);
 int blinker = 0;
@@ -60,8 +63,7 @@ void setup()
   }
   Serial.print("Final Servo pos: ");
   Serial.println(servoPosCurrent);
-  delay(1000);
-  exit(0);
+  delay(100);
   displayClear();
   mouthDrawStatus();
   eyesDrawStatus();
@@ -95,7 +97,7 @@ void loop()
   // button has been pressed
   if (getButtonState())
   {
-    happiness -= dissatisfaction;
+
     useSwitch();
   }
 
@@ -103,6 +105,8 @@ void loop()
   mouthDrawStatus();
   eyesDrawStatus();
   eyeLidsUpDrawStatus();
+  Serial.print("Happiness: ");
+  Serial.println(happiness);
 }
 
 bool getButtonState()
@@ -152,6 +156,7 @@ void displayClear()
 {
   // Clear Display (Set display to background color)
   tft.fillScreen(BACKGROUND);
+  Serial.println("Display cleared");
 }
 
 /*********************************************************************************************************

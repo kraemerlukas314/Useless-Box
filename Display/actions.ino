@@ -2,6 +2,7 @@
 
 void useSwitch()
 {
+    happiness -= dissatisfaction;
     if (happiness >= 0 && happiness <= 100)
     {
         mouthStatus = 0;
