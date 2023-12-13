@@ -20,7 +20,7 @@ int eyesStatusOld = -10000;
 double eyeLidsStatus[4] = {3, 3, 3, 3};
 double eyeLidsStatusOld[4] = {-1, -1, -1, -1};
 long timeLast = millis();
-int happiness = random(1000);
+int happiness = random(100);
 int blinker = 0;
 int blinkTimer = random(3, 10);
 byte servoPosSwitch = 0;
@@ -63,7 +63,6 @@ void setup()
   }
   Serial.print("Final Servo pos: ");
   Serial.println(servoPosCurrent);
-  delay(100);
   displayClear();
   mouthDrawStatus();
   eyesDrawStatus();
@@ -78,9 +77,9 @@ void loop()
   timeLast = millis();
 
   // increase happiness
-  if (!getButtonState() && happiness < 5000)
+  if (!getButtonState() && happiness < 500)
   {
-    happiness++;
+    happiness += happinessAdder;
   }
 
   // Blinking
@@ -102,6 +101,7 @@ void loop()
   }
 
   // Draw / update everything
+  Serial.println(mouthStatus);
   mouthDrawStatus();
   eyesDrawStatus();
   eyeLidsUpDrawStatus();

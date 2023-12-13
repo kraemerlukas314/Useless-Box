@@ -35,3 +35,4 @@
     {                   \
         3, 3, 3, 3      \
     }
+#define happinessAdder 1
