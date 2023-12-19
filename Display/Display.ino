@@ -131,7 +131,7 @@ void incrementTotalButtonCounter()
   EEPROMWritelong(totalButtonPresses);
 }
 
-long EEPROMReadlong()
+uint32_t EEPROMReadlong()
 {
   Serial.println("Reading from EEPROM:");
   for (int i = 0; i < 19; ++i) {
@@ -141,6 +141,14 @@ long EEPROMReadlong()
     Serial.println(EEPROM.read(i));
   }
   // TODO: read from eeprom:
+  byte one = 0;
+  for (int i = 0; i < 16; ++i) {
+    if (EEPROM.read(i) > 0)one = EEPROM.read(i);
+  }
+  byte two = EEPROM.read(16);
+  byte three = EEPROM.read(17);
+  byte four = EEPROM.read(18);
+  return (uint32_t)four << 24 | (uint32_t)three << 16 | (uint32_t)two << 8 | (uint32_t)one;
 }
 
 void EEPROMWritelong(long value)
