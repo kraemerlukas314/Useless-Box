@@ -1,8 +1,7 @@
 #include "defines.h"
 
-void useSwitch()
+void refreshEmotions()
 {
-    happiness -= dissatisfaction;
     Serial.print("happiness2: ");
     Serial.println(happiness);
     if (happiness >= 0 && happiness <= 100)
@@ -33,5 +32,18 @@ void useSwitch()
         eyeLidsStatus[1] = 3;
         eyeLidsStatus[2] = 3;
         eyeLidsStatus[3] = 5;
+    }
+}
+
+void buttonPressed(int animation, int animationStep)
+{
+    switch (animation)
+    {
+    case 1:
+
+        break;
+
+    default:
+        break;
     }
 }
