@@ -96,7 +96,7 @@ void loop()
   // button has been pressed
 
   // Draw / update everything
-  activeAnimation = 1;
+  activeAnimation = 2;
   buttonPressed();
   refreshEmotions();
   mouthDrawStatus();

@@ -7,31 +7,66 @@ void animation1()
     case 0:
         if (moveArm(SERVO_TOGGLE_POS, 10))
         {
-            Serial.println("Animation 1 Done");
             animationStep = 1;
             animationInitilized = false;
-        }
-        else
-        {
-            // Serial.println("Animation 1 not done yet");
         }
 
         break;
     case 1:
         if (moveArm(SERVO_HOME_POS, 1))
         {
-            Serial.println("Animation 2 Done");
             animationStep = 0;
             activeAnimation = -1;
             animationInitilized = false;
         }
-        else
+        break;
+
+    default:
+        animationStep = 0;
+        activeAnimation = -1;
+        animationInitilized = false;
+        break;
+    }
+}
+
+void animation2()
+{
+    switch (animationStep)
+    {
+    case 1:
+        if (moveArm(SERVO_HOME_POS / 2, 1))
         {
-            // Serial.println("Animation 2 not done yet");
+            ++animationStep;
+            animationInitilized = false;
+        }
+        break;
+    case 2:
+        if (moveArm(SERVO_HOME_POS, 1))
+        {
+            ++animationStep;
+            animationInitilized = false;
+        }
+        break;
+    case 3:
+        if (moveArm(SERVO_TOGGLE_POS, 1))
+        {
+            ++animationStep;
+            animationInitilized = false;
+        }
+        break;
+    case 4:
+        if (moveArm(SERVO_HOME : POS, 1))
+        {
+            animationStep = 0;
+            activeAnimation = -1;
+            animationInitilized = false;
         }
         break;
 
     default:
+        animationStep = 0;
+        activeAnimation = -1;
+        animationInitilized = false;
         break;
     }
 }
