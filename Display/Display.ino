@@ -27,6 +27,7 @@ const byte SERVO_DELTA_TOOGLE_HOME = 70; // difference between toogle pos and ho
 int activeAnimation = -1;
 int animationStep = 0;
 double step;
+bool animationInitilized = false;
 
 void setup()
 {
