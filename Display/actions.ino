@@ -2,11 +2,8 @@
 
 void refreshEmotions()
 {
-    Serial.print("happiness2: ");
-    Serial.println(happiness);
     if (happiness >= 0 && happiness <= 100)
     {
-        Serial.println("happiness > 0");
         mouthStatus = 0;
         eyesStatus = 0;
         eyeLidsStatus[0] = 3;
@@ -16,7 +13,6 @@ void refreshEmotions()
     }
     else if (happiness > 100 && happiness <= 200)
     {
-        Serial.println("happiness > 100");
         mouthStatus = 1;
         eyesStatus = 0;
         eyeLidsStatus[0] = 3;
@@ -35,12 +31,12 @@ void refreshEmotions()
     }
 }
 
-void buttonPressed(int animation, int animationStep)
+void buttonPressed()
 {
-    switch (animation)
+    switch (activeAnimation)
     {
     case 1:
-
+        animation1();
         break;
 
     default:

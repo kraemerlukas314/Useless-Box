@@ -57,13 +57,10 @@ void setup()
   {
     servoPosCurrent = servoPosCurrent - 1;
     servo.write(servoPosCurrent);
-    Serial.println(servoPosCurrent);
     delay(15);
   }
-  Serial.print("Final Servo pos: ");
-  Serial.println(servoPosCurrent);
   SERVO_TOGGLE_POS = servoPosCurrent;
-  SERVO_HOME_POS = SERVO_TOGGLE_POS - SERVO_DELTA_TOOGLE_HOME;
+  SERVO_HOME_POS = SERVO_TOGGLE_POS + SERVO_DELTA_TOOGLE_HOME;
   servo.write(SERVO_HOME_POS);
 
   displayClear();
@@ -99,13 +96,12 @@ void loop()
   // button has been pressed
 
   // Draw / update everything
-  Serial.println(mouthStatus);
+  activeAnimation = 1;
+  buttonPressed();
   refreshEmotions();
   mouthDrawStatus();
   eyesDrawStatus();
   eyeLidsUpDrawStatus();
-  Serial.print("Happiness: ");
-  Serial.println(happiness);
 }
 
 bool getButtonState()
@@ -156,16 +152,6 @@ void EEPROMWritelong(long value)
   byte three = ((value >> 16) & 0xFF);
   byte four = ((value >> 24) & 0xFF);
 
-  Serial.println("Trying to write to EEPROM with these values:");
-  Serial.print("One: ");
-  Serial.print(one);
-  Serial.print(" Two: ");
-  Serial.print(two);
-  Serial.print(" Three: ");
-  Serial.print(three);
-  Serial.print(" Four: ");
-  Serial.println(four);
-
   // to avoid eeprom wear down, least significant byte (that changes very frequently)
   // is written somewhere between address 0 and 15
   byte address_to_write = 0;
@@ -178,11 +164,7 @@ void EEPROMWritelong(long value)
   if (address_to_write == 0)
   {
     address_to_write = millis() % 16;
-    Serial.print("0-15 is 0, chose random address: ");
-    Serial.println(address_to_write);
   }
-  Serial.print("Address I write byte 1 to: ");
-  Serial.println(address_to_write);
   EEPROM.write(address_to_write, one);
   EEPROM.write(16, two);
   EEPROM.write(17, three);
@@ -193,7 +175,6 @@ void displayClear()
 {
   // Clear Display (Set display to background color)
   tft.fillScreen(BACKGROUND);
-  Serial.println("Display cleared");
 }
 
 /*********************************************************************************************************
