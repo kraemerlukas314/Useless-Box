@@ -1,11 +1,5 @@
 #include "defines.h"
 
-// Hardware SPI on Feather or other boards
-// Adafruit_GC9A01A tft(TFT_CS, TFT_DC);
-// const int WHITE = 0xffffff;
-// const int BLACK = 0x000000;
-// const int BACKGROUND = BLACK;
-
 Adafruit_GC9A01A tft(TFT_CS, TFT_DC);
 
 Servo servo;
@@ -27,21 +21,22 @@ byte servoPosSwitch = 0;
 byte servoPosHome = 0;
 byte servoPosCurrent = 0;
 uint32_t totalButtonPresses = 0;
+byte SERVO_TOGGLE_POS; // is a variable but is only changed once
+byte SERVO_HOME_POS;
+const byte SERVO_DELTA_TOOGLE_HOME = 70; // difference between toogle pos and home pos
 
 void setup()
 {
   Serial.begin(115200);
   pinMode(PIN_BTN, INPUT_PULLUP);
   servo.attach(PIN_SERVO);
-  servo.write(180);
-  servoPosCurrent = 180;
-  delay(1000);
   totalButtonPresses = EEPROMReadlong(0);
   Serial.print("Total button presses read from EEPROM: ");
   Serial.println(totalButtonPresses);
   tft.begin();
   displayClear();
-  // falls Zähler kleiner 99999 ist, werden die Stellen davor mit Nullen aufgefüllt
+
+  // if counter is < 999999 -> fill empty digits with zeros so string always has length 6
   String formattedString = String(totalButtonPresses);
   while (formattedString.length() < 6)
   {
@@ -50,10 +45,13 @@ void setup()
   tft.setTextSize(6);
   tft.setCursor(16, 95);
   tft.print(formattedString);
+
+  // wait for user to toggle button
   while (!getButtonState())
   {
   }
   // Calibrate servo position
+  servoPosCurrent = servo.read();
   while (getButtonState() && servoPosCurrent > 0)
   {
     servoPosCurrent = servoPosCurrent - 1;
@@ -63,6 +61,10 @@ void setup()
   }
   Serial.print("Final Servo pos: ");
   Serial.println(servoPosCurrent);
+  SERVO_TOGGLE_POS = servoPosCurrent;
+  SERVO_HOME_POS = SERVO_TOGGLE_POS - SERVO_DELTA_TOOGLE_HOME;
+  servo.write(SERVO_HOME_POS);
+
   displayClear();
   mouthDrawStatus();
   eyesDrawStatus();
