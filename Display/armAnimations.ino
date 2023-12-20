@@ -2,6 +2,7 @@
 
 void animation1()
 {
+    Serial.println("animation 1");
     switch (animationStep)
     {
     case 0:
@@ -31,6 +32,7 @@ void animation1()
 
 void animation2()
 {
+    Serial.println("Animation 2");
     switch (animationStep)
     {
     case 1:
@@ -55,7 +57,7 @@ void animation2()
         }
         break;
     case 4:
-        if (moveArm(SERVO_HOME : POS, 1))
+        if (moveArm(SERVO_HOME_POS, 1))
         {
             animationStep = 0;
             activeAnimation = -1;

@@ -36,12 +36,10 @@ void buttonPressed()
     switch (activeAnimation)
     {
     case 1:
-        Serial.println("Animation 1");
         animation1();
         break;
 
     case 2:
-        Serial.println("Animation 2");
         animation2();
         break;
 

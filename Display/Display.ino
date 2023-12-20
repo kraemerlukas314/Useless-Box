@@ -31,6 +31,7 @@ bool animationInitilized = false;
 void setup()
 {
   Serial.begin(115200);
+  Serial.println("---- NEW START ----");
 
   pinMode(PIN_BTN, INPUT_PULLUP);
   servo.attach(PIN_SERVO);
@@ -124,14 +125,6 @@ void incrementButtonPresses()
 
 uint32_t getButtonPresses()
 {
-  Serial.println("Reading from EEPROM:");
-  for (int i = 0; i < 19; ++i)
-  {
-    Serial.print("Address: ");
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(EEPROM.read(i));
-  }
   // TODO: read from eeprom:
   byte one = 0;
   for (int i = 0; i < 16; ++i)
