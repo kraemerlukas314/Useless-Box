@@ -17,7 +17,6 @@ int blinkTimer = random(3, 10);
 byte servoPosSwitch = 0;
 byte servoPosHome = 0;
 byte servoPosCurrent = 0;
-uint32_t totalButtonPresses = 0;
 byte SERVO_TOGGLE_POS; // is a variable but is only changed once
 byte SERVO_HOME_POS;
 const byte SERVO_DELTA_TOOGLE_HOME = 70; // difference between toogle pos and home pos
@@ -26,20 +25,13 @@ void setup()
 {
   Serial.begin(115200);
 
-  Serial.println("Before");
-  EEPROMWritelong(42);
-  EEPROMReadlong();
-  Serial.println("After");
-  delay(1000);
-  exit(0);
-
   pinMode(PIN_BTN, INPUT_PULLUP);
   servo.attach(PIN_SERVO);
   tft.begin();
   displayClear();
 
   // if counter is < 999999 -> fill empty digits with zeros so string always has length 6
-  String formattedString = String(totalButtonPresses);
+  String formattedString = String(getButtonPresses());
   while (formattedString.length() < 6)
   {
     formattedString = "0" + formattedString;
@@ -123,15 +115,12 @@ bool getButtonState()
 }
 
 // increments the total button counter and writes result to EEPROM
-void incrementTotalButtonCounter()
+void incrementButtonPresses()
 {
-  ++totalButtonPresses;
-  Serial.print("Total button presses: ");
-  Serial.println(totalButtonPresses);
-  EEPROMWritelong(totalButtonPresses);
+  EEPROMWritelong(getButtonPresses() + 1);
 }
 
-uint32_t EEPROMReadlong()
+uint32_t getButtonPresses()
 {
   Serial.println("Reading from EEPROM:");
   for (int i = 0; i < 19; ++i) {
