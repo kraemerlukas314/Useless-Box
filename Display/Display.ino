@@ -8,10 +8,13 @@ int eyesColor = 0x0066ff;
 int eyesColorSize = EYES_SIZE / 2;
 int eyesPupilSize = EYES_SIZE / 2.8;
 int mouthStatus = 0;
+int mouthStatusOld = -1;
 int eyesStatus = 0;
+int eyesStatusOld = -10000;
 double eyeLidsStatus[4] = {3, 3, 3, 3};
+double eyeLidsStatusOld[4] = {-1, -1, -1, -1};
 long timeLast = millis();
-int happiness = random(1000);
+int happiness = random(100);
 int blinker = 0;
 int blinkTimer = random(3, 10);
 byte servoPosSwitch = 0;
@@ -20,6 +23,10 @@ byte servoPosCurrent = 0;
 byte SERVO_TOGGLE_POS; // is a variable but is only changed once
 byte SERVO_HOME_POS;
 const byte SERVO_DELTA_TOOGLE_HOME = 70; // difference between toogle pos and home pos
+int activeAnimation = -1;
+int animationStep = 0;
+double step;
+bool animationInitilized = false;
 
 void setup()
 {
@@ -73,9 +80,9 @@ void loop()
   timeLast = millis();
 
   // increase happiness
-  if (!getButtonState() && happiness < 5000)
+  if (!getButtonState() && happiness < 500)
   {
-    happiness++;
+    happiness += happinessAdder;
   }
 
   // Blinking
@@ -90,16 +97,15 @@ void loop()
   }
 
   // button has been pressed
-  if (getButtonState())
-  {
-    happiness -= dissatisfaction;
-    useSwitch();
-  }
 
   // Draw / update everything
+  Serial.println(mouthStatus);
+  refreshEmotions();
   mouthDrawStatus();
   eyesDrawStatus();
   eyeLidsUpDrawStatus();
+  Serial.print("Happiness: ");
+  Serial.println(happiness);
 }
 
 bool getButtonState()
@@ -123,7 +129,8 @@ void incrementButtonPresses()
 uint32_t getButtonPresses()
 {
   Serial.println("Reading from EEPROM:");
-  for (int i = 0; i < 19; ++i) {
+  for (int i = 0; i < 19; ++i)
+  {
     Serial.print("Address: ");
     Serial.print(i);
     Serial.print(": ");
@@ -131,8 +138,10 @@ uint32_t getButtonPresses()
   }
   // TODO: read from eeprom:
   byte one = 0;
-  for (int i = 0; i < 16; ++i) {
-    if (EEPROM.read(i) > 0)one = EEPROM.read(i);
+  for (int i = 0; i < 16; ++i)
+  {
+    if (EEPROM.read(i) > 0)
+      one = EEPROM.read(i);
   }
   byte two = EEPROM.read(16);
   byte three = EEPROM.read(17);
@@ -160,11 +169,14 @@ void EEPROMWritelong(long value)
   // to avoid eeprom wear down, least significant byte (that changes very frequently)
   // is written somewhere between address 0 and 15
   byte address_to_write = 0;
-  for (int i = 0; i < 16; ++i) {
-    if (EEPROM.read(i) > 0) address_to_write = i;
+  for (int i = 0; i < 16; ++i)
+  {
+    if (EEPROM.read(i) > 0)
+      address_to_write = i;
   }
   // there's 0 in every address, so choose random between 0 and 15
-  if (address_to_write == 0) {
+  if (address_to_write == 0)
+  {
     address_to_write = millis() % 16;
     Serial.print("0-15 is 0, chose random address: ");
     Serial.println(address_to_write);
@@ -181,6 +193,7 @@ void displayClear()
 {
   // Clear Display (Set display to background color)
   tft.fillScreen(BACKGROUND);
+  Serial.println("Display cleared");
 }
 
 /*********************************************************************************************************

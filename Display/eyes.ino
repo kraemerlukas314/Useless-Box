@@ -32,32 +32,48 @@ void eyeRightMiddle()
 
 // draw status
 
+void eyesDrawStatus(int aStatus, int *oldStatus, bool force)
+{
+
+  if (aStatus != *oldStatus || force)
+  {
+
+    switch (aStatus)
+    {
+    case (0):
+    {
+      eyesDrawAt(0, 0, 0, 0);
+      break;
+    }
+    case (500):
+    {
+      // look at switch
+      eyesDrawAt(0.8, -0.8, -0.8, -0.8);
+      break;
+    }
+    default:
+    {
+      eyesDrawStatus(0);
+      break;
+    }
+    }
+    *oldStatus = aStatus;
+  }
+}
+
 void eyesDrawStatus(int aStatus)
 {
-  switch (aStatus)
-  {
-  case (0):
-  {
-    eyesDrawAt(0, 0, 0, 0);
-    break;
-  }
-  case (500):
-  {
-    // look at switch
-    eyesDrawAt(0.8, -0.8, -0.8, -0.8);
-    break;
-  }
-  default:
-  {
-    eyesDrawStatus(0);
-    break;
-  }
-  }
+  eyesDrawStatus(aStatus, &eyesStatusOld, false);
 }
 
 void eyesDrawStatus()
 {
-  eyesDrawStatus(eyesStatus);
+  eyesDrawStatus(eyesStatus, &eyesStatusOld, false);
+}
+
+void eyesDrawStatus(bool force)
+{
+  eyesDrawStatus(eyesStatus, &eyesStatusOld, force);
 }
 
 void eyeRightDrawAt(double x, double y)
@@ -77,7 +93,7 @@ void eyesDrawAt(double xl, double yl, double xr, double yr)
   eyesSetup();
   eyeLeftDrawAt(xl, yl);
   eyeRightDrawAt(xr, yr);
-  eyeLidsUpDrawStatus();
+  eyeLidsUpDrawStatus(true);
 }
 
 // eyelids
@@ -98,14 +114,27 @@ void eyeLidsUpDraw(double leftEyeLeftHeight, double leftEyeRightHeight, double r
   eyeLidRightUp(rightEyeLeftHeight, rightEyeRightHeight);
 }
 
+void eyeLidsUpDrawStatus(bool force)
+{
+
+  if (force || (eyeLidsStatus[0] != eyeLidsStatusOld[0]) || (eyeLidsStatus[1] != eyeLidsStatusOld[1]) || (eyeLidsStatus[2] != eyeLidsStatusOld[2]) || (eyeLidsStatus[3] != eyeLidsStatusOld[3]))
+  {
+    eyeLidsUpDraw(eyeLidsStatus[0], eyeLidsStatus[1], eyeLidsStatus[2], eyeLidsStatus[3]);
+    eyeLidsStatusOld[0] = eyeLidsStatus[0];
+    eyeLidsStatusOld[1] = eyeLidsStatus[1];
+    eyeLidsStatusOld[2] = eyeLidsStatus[2];
+    eyeLidsStatusOld[3] = eyeLidsStatus[3];
+  }
+}
+
 void eyeLidsUpDrawStatus()
 {
-  eyeLidsUpDraw(eyeLidsStatus[0], eyeLidsStatus[1], eyeLidsStatus[2], eyeLidsStatus[3]);
+  eyeLidsUpDrawStatus(false);
 }
 
 void eyesBlink()
 {
   eyeLidsUpDraw(70, 70, 70, 70);
   delay(100);
-  eyesDrawStatus();
+  eyesDrawStatus(true);
 }

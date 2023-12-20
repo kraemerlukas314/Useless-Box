@@ -31,29 +31,34 @@ void mouthPositive2()
   tft.fillCircle(X_MAX / 2, Y_MAX / 2, X_MAX / 3, BACKGROUND);
 }
 
-void mouthDrawStatus(int aStatus)
+void mouthDrawStatus(int aStatus, int *oldStatus)
 {
-  mouthReset();
-  switch (aStatus)
+  if (aStatus != *oldStatus)
   {
-  case (0):
-    mouthNeutral();
-  case (1):
-  {
-    mouthPositive1();
-    eyesDrawStatus();
-    break;
-  }
-  case (2):
-  {
-    mouthPositive2();
-    eyesDrawStatus();
-    break;
-  }
+    mouthReset();
+    switch (aStatus)
+    {
+    case (0):
+      mouthNeutral();
+      break;
+    case (1):
+    {
+      mouthPositive1();
+      eyesDrawStatus();
+      break;
+    }
+    case (2):
+    {
+      mouthPositive2();
+      eyesDrawStatus();
+      break;
+    }
+    }
+    *oldStatus = aStatus;
   }
 }
 
 void mouthDrawStatus()
 {
-  mouthDrawStatus(mouthStatus);
+  mouthDrawStatus(mouthStatus, &mouthStatusOld);
 }
