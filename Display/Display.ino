@@ -28,11 +28,16 @@ const byte SERVO_DELTA_TOOGLE_HOME = 70; // difference between toogle pos and ho
 void setup()
 {
   Serial.begin(115200);
+
+  Serial.println("Before");
+  EEPROMWritelong(42);
+  EEPROMReadlong();
+  Serial.println("After");
+  delay(1000);
+  exit(0);
+
   pinMode(PIN_BTN, INPUT_PULLUP);
   servo.attach(PIN_SERVO);
-  totalButtonPresses = EEPROMReadlong(0);
-  Serial.print("Total button presses read from EEPROM: ");
-  Serial.println(totalButtonPresses);
   tft.begin();
   displayClear();
 
@@ -127,31 +132,66 @@ bool getButtonState()
 void incrementTotalButtonCounter()
 {
   ++totalButtonPresses;
-  EEPROMWritelong(0, totalButtonPresses);
-  // EEPROMWritelong(0, 0);
+  Serial.print("Total button presses: ");
+  Serial.println(totalButtonPresses);
+  EEPROMWritelong(totalButtonPresses);
 }
 
-long EEPROMReadlong(long address)
+uint32_t EEPROMReadlong()
 {
-  long four = EEPROM.read(address);
-  long three = EEPROM.read(address + 1);
-  long two = EEPROM.read(address + 2);
-  long one = EEPROM.read(address + 3);
-
-  return ((four << 0) & 0xFF) + ((three << 8) & 0xFFFF) + ((two << 16) & 0xFFFFFF) + ((one << 24) & 0xFFFFFFFF);
+  Serial.println("Reading from EEPROM:");
+  for (int i = 0; i < 19; ++i) {
+    Serial.print("Address: ");
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.println(EEPROM.read(i));
+  }
+  // TODO: read from eeprom:
+  byte one = 0;
+  for (int i = 0; i < 16; ++i) {
+    if (EEPROM.read(i) > 0)one = EEPROM.read(i);
+  }
+  byte two = EEPROM.read(16);
+  byte three = EEPROM.read(17);
+  byte four = EEPROM.read(18);
+  return (uint32_t)four << 24 | (uint32_t)three << 16 | (uint32_t)two << 8 | (uint32_t)one;
 }
 
-void EEPROMWritelong(int address, long value)
+void EEPROMWritelong(long value)
 {
-  byte four = (value & 0xFF);
-  byte three = ((value >> 8) & 0xFF);
-  byte two = ((value >> 16) & 0xFF);
-  byte one = ((value >> 24) & 0xFF);
+  byte one = (value & 0xFF);
+  byte two = ((value >> 8) & 0xFF);
+  byte three = ((value >> 16) & 0xFF);
+  byte four = ((value >> 24) & 0xFF);
 
-  EEPROM.write(address, four);
-  EEPROM.write(address + 1, three);
-  EEPROM.write(address + 2, two);
-  EEPROM.write(address + 3, one);
+  Serial.println("Trying to write to EEPROM with these values:");
+  Serial.print("One: ");
+  Serial.print(one);
+  Serial.print(" Two: ");
+  Serial.print(two);
+  Serial.print(" Three: ");
+  Serial.print(three);
+  Serial.print(" Four: ");
+  Serial.println(four);
+
+  // to avoid eeprom wear down, least significant byte (that changes very frequently)
+  // is written somewhere between address 0 and 15
+  byte address_to_write = 0;
+  for (int i = 0; i < 16; ++i) {
+    if (EEPROM.read(i) > 0) address_to_write = i;
+  }
+  // there's 0 in every address, so choose random between 0 and 15
+  if (address_to_write == 0) {
+    address_to_write = millis() % 16;
+    Serial.print("0-15 is 0, chose random address: ");
+    Serial.println(address_to_write);
+  }
+  Serial.print("Address I write byte 1 to: ");
+  Serial.println(address_to_write);
+  EEPROM.write(address_to_write, one);
+  EEPROM.write(16, two);
+  EEPROM.write(17, three);
+  EEPROM.write(18, four);
 }
 
 void displayClear()
