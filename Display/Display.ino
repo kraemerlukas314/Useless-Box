@@ -98,7 +98,7 @@ void loop()
 
   // Draw / update everything
   activeAnimation = 2;
-  buttonPressed();
+  handleButtonPressed();
   refreshEmotions();
   mouthDrawStatus();
   eyesDrawStatus();

@@ -31,7 +31,7 @@ void refreshEmotions()
     }
 }
 
-void buttonPressed()
+void handleButtonPressed()
 {
     switch (activeAnimation)
     {

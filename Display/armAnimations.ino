@@ -80,7 +80,7 @@ bool moveArm(byte targetPos, byte steps)
     {
         Serial.println("TargetPos: " + String(targetPos));
         Serial.println("PosNow: " + String(posNow));
-        step = (targetPos - posNow) / steps;
+        step = round((targetPos - posNow) / steps);
         animationInitilized = true;
         Serial.println("Animation initialized with step " + String(step));
     }

@@ -33,6 +33,6 @@
 #define dissatisfaction 100
 #define eyeLidsStandard \
     {                   \
-        3, 3, 3, 3      \
-    }
+        3, 3, 3, 3       \
+    } // kommentar
 #define happinessAdder 1
