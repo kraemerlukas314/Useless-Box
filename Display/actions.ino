@@ -35,6 +35,9 @@ void handleButtonPressed()
 {
     switch (activeAnimation)
     {
+    case 0:
+        resetAnimation();
+        break;
     case 1:
         animation1();
         break;

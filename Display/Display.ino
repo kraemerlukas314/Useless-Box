@@ -96,8 +96,17 @@ void loop()
 
   // button has been pressed
 
+  if (getButtonState() && activeAnimation == -1)
+  {
+    randomSeed(analogRead(0));
+    activeAnimation = random(1, maxArmAnimations);
+  }
+  else if (!getButtonState() && activeAnimation != -1)
+  {
+    activeAnimation = 0;
+  }
+
   // Draw / update everything
-  activeAnimation = 2;
   handleButtonPressed();
   refreshEmotions();
   mouthDrawStatus();

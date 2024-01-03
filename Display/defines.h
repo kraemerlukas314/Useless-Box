@@ -36,3 +36,4 @@
         3, 3, 3, 3       \
     } // kommentar
 #define happinessAdder 1
+#define maxArmAnimations 2

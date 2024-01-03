@@ -1,5 +1,16 @@
 #include "defines.h"
 
+void resetAnimation() {
+    if (moveArm(SERVO_HOME_POS, 1))
+    {
+        activeAnimation = -1;
+        animationStep = 0;
+        animationInitilized = false;
+    }
+    
+
+}
+
 void animation1()
 {
     Serial.println("animation 1");
