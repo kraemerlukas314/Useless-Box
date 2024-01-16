@@ -129,6 +129,7 @@ void loop()
   {
     handleStandardExpression();
     handleButtonPressed();
+    blinker = blinker / 2;
   }
 
   // Blinking
