@@ -75,9 +75,11 @@ void setup()
     servo.write(servoPosCurrent);
     delay(15);
   }
-  SERVO_TOGGLE_POS = servoPosCurrent + 5;
+  SERVO_TOGGLE_POS = servoPosCurrent + 7;
   SERVO_HOME_POS = 180; // SERVO_TOGGLE_POS + SERVO_DELTA_TOOGLE_HOME;
   servo.write(SERVO_HOME_POS);
+  Serial.println("SERVO_HOME_POS: " + String(SERVO_HOME_POS));
+  Serial.println("SERVO_TOGGLE_POS: " + String(SERVO_TOGGLE_POS));
   displayClear();
   eyesRedraw();
   eyeLidsRedraw();

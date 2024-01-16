@@ -104,6 +104,7 @@ void animation2()
             armAnimationInited = false;
             animationStep++;
         }
+        break;
 
     case 7:
         servo.detach();
@@ -194,10 +195,10 @@ void animation4()
         break;
 
     case 1:
-        for (byte i = 0; i < random(0, 40); i++)
+        for (byte i = 0; i < random(1, 40); i++)
         {
             moveArm(SERVO_HOME_POS - 10, 1);
-            delay(50);
+            delay(300);
             moveArm(SERVO_HOME_POS, 1);
         }
         armAnimationInited = false;
@@ -205,10 +206,10 @@ void animation4()
         break;
 
     case 2:
-        for (byte i = 0; random(1, 5); i++)
+        for (byte i = 0; i < random(1, 5); i++)
         {
-            moveArm(SERVO_TOGGLE_POS, 1);
-            delay(random(1, 50));
+            moveArm(SERVO_TOGGLE_POS + 3, 1);
+            delay(random(200, 500));
             moveArm(SERVO_HOME_POS - ((SERVO_HOME_POS - SERVO_TOGGLE_POS) / 2), 1);
         }
         armAnimationInited = false;
@@ -260,7 +261,7 @@ void animation5()
         break;
 
     case 3:
-        if (moveArm(SERVO_TOGGLE_POS, 1))
+        if (moveArm(SERVO_TOGGLE_POS - 10, 1))
         {
             armAnimationInited = false;
             animationStep++;
@@ -313,10 +314,26 @@ bool moveArm(byte targetPos, byte steps)
     {
         buttonPushedByArm = true;
     }
-    servo.write(posNow + armAnimationDeg);
-    delay(500);
+    if (posNow + armAnimationDeg != posNow)
+    {
+        if (posNow + armAnimationDeg >= SERVO_TOGGLE_POS)
+        {
+            servo.write(posNow + armAnimationDeg);
+        }
+        else
+        {
+            servo.write(SERVO_TOGGLE_POS);
+            return true;
+        }
+    }
+    else
+    {
+        return true;
+    }
+
+    delay(abs(armAnimationDeg * 10));
     posNow = servo.read();
     Serial.println("PosNow: " + String(posNow));
 
-    return (armAnimationDeg < 0 && posNow <= targetPos) || (armAnimationDeg > 0 && posNow >= targetPos);
+    return (armAnimationDeg <= 0 && posNow <= targetPos) || (armAnimationDeg >= 0 && posNow >= targetPos);
 }
