@@ -16,26 +16,40 @@ double eyeLidsStatusOld[4] = {-1, -1, -1, -1};
 long timeLast = millis();
 int happiness = random(100);
 int blinker = 0;
-int blinkTimer = random(3, 10);
+int blinkTimer = 150;
 byte servoPosSwitch = 0;
 byte servoPosHome = 0;
 byte servoPosCurrent = 0;
 byte SERVO_TOGGLE_POS; // is a variable but is only changed once
 byte SERVO_HOME_POS;
-const byte SERVO_DELTA_TOOGLE_HOME = 70; // difference between toogle pos and home pos
+const byte SERVO_DELTA_TOOGLE_HOME = 120; // difference between toogle pos and home pos
 int activeAnimation = -1;
+int eyeLeftActualPositionX = 0;
+int eyeLeftActualPositionY = 0;
+int eyeRightActualPositionX = 0;
+int eyeRightActualPositionY = 0;
+int eyeLidActualPositionLL = 0;
+int eyeLidActualPositionLR = 0;
+int eyeLidActualPositionRL = 0;
+int eyeLidActualPositionRR = 0;
+int mouthActualStatus = -100000;
+int eyesActualColor = 0;
+bool buttonPushedByArm = true;
 int animationStep = 0;
-double step;
-bool animationInitilized = false;
+bool animationFinished = true;
+bool armAnimationInited = false;
+int armAnimationDeg = 0;
 
 void setup()
 {
+  randomSeed(analogRead(0));
   Serial.begin(115200);
   Serial.println("---- NEW START ----");
-
+  tft.begin();
   pinMode(PIN_BTN, INPUT_PULLUP);
   servo.attach(PIN_SERVO);
-  tft.begin();
+  servo.write(180);
+  servo.detach();
   displayClear();
 
   // if counter is < 999999 -> fill empty digits with zeros so string always has length 6
@@ -52,6 +66,7 @@ void setup()
   while (!getButtonState())
   {
   }
+  servo.attach(PIN_SERVO);
   // Calibrate servo position
   servoPosCurrent = servo.read();
   while (getButtonState() && servoPosCurrent > 0)
@@ -60,27 +75,60 @@ void setup()
     servo.write(servoPosCurrent);
     delay(15);
   }
-  SERVO_TOGGLE_POS = servoPosCurrent;
-  SERVO_HOME_POS = SERVO_TOGGLE_POS + SERVO_DELTA_TOOGLE_HOME;
+  SERVO_TOGGLE_POS = servoPosCurrent + 5;
+  SERVO_HOME_POS = 180; // SERVO_TOGGLE_POS + SERVO_DELTA_TOOGLE_HOME;
   servo.write(SERVO_HOME_POS);
-
   displayClear();
-  mouthDrawStatus();
-  eyesDrawStatus();
+  eyesRedraw();
+  eyeLidsRedraw();
+  mouthDrawStatus(0);
 }
 
 void loop()
 {
   while (millis() - timeLast < intervall)
   {
-    delay(1);
   }
   timeLast = millis();
 
-  // increase happiness
-  if (!getButtonState() && happiness < 500)
+  if (!getButtonState() && activeAnimation == -1)
   {
-    happiness += happinessAdder;
+    if (happiness < MAX_HAPPINESS)
+    {
+      happiness += happinessAdder;
+    }
+    handleStandardExpression();
+  }
+  else if (!getButtonState() && activeAnimation != -1 && !buttonPushedByArm)
+  {
+    Serial.println("Button pressed while playing animation. Cancelling animation...");
+    armAnimationInited = false;
+    resetAnimation();
+    activeAnimation = -1;
+    animationStep = 0;
+    if (happiness + happinessAdder * 10 <= MAX_HAPPINESS)
+    {
+      happiness += happinessAdder * 10;
+    }
+    incrementButtonPresses();
+  }
+  else if (getButtonState() && activeAnimation == -1)
+  {
+    if (happiness - dissatisfaction >= MIN_HAPPINESS)
+    {
+      happiness -= dissatisfaction;
+    }
+    activeAnimation = random(1, maxArmAnimations + 1);
+    animationStep = 0;
+    buttonPushedByArm = false;
+
+    Serial.println("Starting new animation: " + String(activeAnimation));
+  }
+
+  if (activeAnimation != -1)
+  {
+    handleStandardExpression();
+    handleButtonPressed();
   }
 
   // Blinking
@@ -93,25 +141,6 @@ void loop()
   {
     --blinker;
   }
-
-  // button has been pressed
-
-  if (getButtonState() && activeAnimation == -1)
-  {
-    randomSeed(analogRead(0));
-    activeAnimation = random(1, maxArmAnimations);
-  }
-  else if (!getButtonState() && activeAnimation != -1)
-  {
-    activeAnimation = 0;
-  }
-
-  // Draw / update everything
-  handleButtonPressed();
-  refreshEmotions();
-  mouthDrawStatus();
-  eyesDrawStatus();
-  eyeLidsUpDrawStatus();
 }
 
 bool getButtonState()
@@ -123,7 +152,7 @@ bool getButtonState()
   if (buttonState != lastButtonState)
     lastDebounceTime = millis();
 
-  return (millis() - lastDebounceTime) > 50 ? lastButtonState = buttonState : !lastButtonState;
+  return !((millis() - lastDebounceTime) > 50 ? lastButtonState = buttonState : !lastButtonState);
 }
 
 // increments the total button counter and writes result to EEPROM

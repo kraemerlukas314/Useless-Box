@@ -546,7 +546,15 @@
             "compilerArgs": [],
             "intelliSenseMode": "windows-gcc-x64",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "C:/programming/Useless-Box/Display",
+                "C:/Users/drago/OneDrive/Documents/Arduino/**",
+                "C:/Users/drago/OneDrive/Documents/Arduino/libraries/**",
+                "C:/Users/drago/AppData/Local/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include/avr",
+                "C:/Users/drago/OneDrive/Documents/Arduino/libraries/Adafruit_BusIO",
+                "C:/Users/drago/OneDrive/Documents/Arduino/libraries/Adafruit_GC9A01A",
+                "C:/Users/drago/OneDrive/Documents/Arduino/libraries/Adafruit_GFX_Library",
+                "C:/Users/drago/OneDrive/Documents/Arduino/libraries"
             ],
             "forcedInclude": [],
             "cStandard": "c11",

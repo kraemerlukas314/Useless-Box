@@ -1,85 +1,236 @@
 #include "defines.h"
 
-void resetAnimation() {
+void resetAnimation()
+{
     if (moveArm(SERVO_HOME_POS, 1))
     {
+        armAnimationInited = false;
         activeAnimation = -1;
         animationStep = 0;
-        animationInitilized = false;
+        animationFinished = true;
+        servo.detach();
     }
-    
-
 }
 
 void animation1()
 {
-    Serial.println("animation 1");
     switch (animationStep)
     {
     case 0:
-        if (moveArm(SERVO_TOGGLE_POS, 10))
-        {
-            animationStep = 1;
-            animationInitilized = false;
-        }
+        Serial.println("AnimationStep: " + String(animationStep));
+        servo.attach(PIN_SERVO);
+        animationStep++;
 
         break;
+
     case 1:
-        if (moveArm(SERVO_HOME_POS, 1))
+        Serial.println("AnimationStep: " + String(animationStep));
+        if (moveArm(SERVO_TOGGLE_POS, 5))
         {
-            animationStep = 0;
-            activeAnimation = -1;
-            animationInitilized = false;
+            armAnimationInited = false;
+            animationStep++;
         }
+        break;
+
+    case 2:
+        Serial.println("AnimationStep: " + String(animationStep));
+        if (moveArm(SERVO_HOME_POS, 2))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+    case 3:
+        Serial.println("AnimationStep: " + String(animationStep));
+        servo.detach();
+        animationFinished = true;
+        animationStep = 0;
+        activeAnimation = -1;
         break;
 
     default:
-        animationStep = 0;
-        activeAnimation = -1;
-        animationInitilized = false;
         break;
     }
 }
 
 void animation2()
 {
-    Serial.println("Animation 2");
     switch (animationStep)
     {
+    case 0:
+        servo.attach(PIN_SERVO);
+        animationStep++;
+        break;
+
     case 1:
-        if (moveArm(SERVO_HOME_POS / 2, 1))
+        if (moveArm(SERVO_HOME_POS - ((SERVO_HOME_POS - SERVO_TOGGLE_POS) / 2), 2))
         {
-            ++animationStep;
-            animationInitilized = false;
-        }
-        break;
-    case 2:
-        if (moveArm(SERVO_HOME_POS, 1))
-        {
-            ++animationStep;
-            animationInitilized = false;
-        }
-        break;
-    case 3:
-        if (moveArm(SERVO_TOGGLE_POS, 1))
-        {
-            ++animationStep;
-            animationInitilized = false;
-        }
-        break;
-    case 4:
-        if (moveArm(SERVO_HOME_POS, 1))
-        {
-            animationStep = 0;
-            activeAnimation = -1;
-            animationInitilized = false;
+            armAnimationInited = false;
+            animationStep++;
         }
         break;
 
-    default:
+    case 2:
+        if (moveArm(SERVO_HOME_POS, 1))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+
+    case 3:
+        delay(random(500, 2000));
+        armAnimationInited = false;
+        animationStep++;
+        break;
+
+    case 4:
+        if (moveArm(SERVO_TOGGLE_POS, 1))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+
+    case 5:
+        delay(1000);
+        armAnimationInited = false;
+        animationStep++;
+        break;
+
+    case 6:
+        if (moveArm(SERVO_HOME_POS, 1))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+
+    case 7:
+        servo.detach();
+        animationFinished = true;
         animationStep = 0;
         activeAnimation = -1;
-        animationInitilized = false;
+        break;
+
+    default:
+        break;
+    }
+}
+
+void animation3()
+{
+    switch (animationStep)
+    {
+    case 0:
+        servo.attach(PIN_SERVO);
+        animationStep++;
+        break;
+
+    case 1:
+        delay(random(0, 2000));
+        armAnimationInited = false;
+        animationStep++;
+        delay(random(0, 1000));
+        break;
+
+    case 2:
+
+        if (moveArm(SERVO_TOGGLE_POS + 10, 1))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+
+    case 3:
+        if (moveArm(SERVO_HOME_POS, 1))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+
+    case 4:
+        delay(random(300, 1500));
+        armAnimationInited = false;
+        animationStep++;
+        break;
+
+    case 5:
+        if (moveArm(SERVO_TOGGLE_POS, 1))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+
+    case 6:
+        if (moveArm(SERVO_HOME_POS, 1))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+
+    case 7:
+        servo.detach();
+        animationFinished = true;
+        animationStep = 0;
+        activeAnimation = -1;
+        break;
+
+    default:
+        break;
+    }
+}
+
+void animation4()
+{
+    switch (animationStep)
+    {
+    case 0:
+        servo.attach(PIN_SERVO);
+        animationStep++;
+        break;
+
+    case 1:
+        for (byte i = 0; i < random(0, 40); i++)
+        {
+            moveArm(SERVO_HOME_POS - 10, 1);
+            delay(50);
+            moveArm(SERVO_HOME_POS, 1);
+        }
+        armAnimationInited = false;
+        animationStep++;
+        break;
+
+    case 2:
+        for (byte i = 0; random(1, 5); i++)
+        {
+            moveArm(SERVO_TOGGLE_POS, 1);
+            delay(random(1, 50));
+            moveArm(SERVO_HOME_POS - ((SERVO_HOME_POS - SERVO_TOGGLE_POS) / 2), 1);
+        }
+        armAnimationInited = false;
+        animationStep++;
+        break;
+
+    case 3:
+        if (moveArm(SERVO_HOME_POS, 3))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+
+    case 4:
+        servo.detach();
+        animationFinished = true;
+        animationStep = 0;
+        activeAnimation = -1;
+        break;
+
+    default:
         break;
     }
 }
@@ -87,17 +238,27 @@ void animation2()
 bool moveArm(byte targetPos, byte steps)
 {
     byte posNow = servo.read();
-    if (!animationInitilized)
+    if (!armAnimationInited)
     {
         Serial.println("TargetPos: " + String(targetPos));
         Serial.println("PosNow: " + String(posNow));
-        step = round((targetPos - posNow) / steps);
-        animationInitilized = true;
-        Serial.println("Animation initialized with step " + String(step));
+        armAnimationDeg = round((targetPos - posNow) / steps);
+        armAnimationInited = true;
+        if (armAnimationDeg == 0)
+        {
+            return true;
+        }
+        Serial.println("Animation initialized with step " + String(armAnimationDeg));
     }
-    servo.write(round((posNow + step)));
-    // Serial.println("Position now: " + String(posNow) + ", wanted position: " + String(targetPos));
-    posNow = servo.read();
 
-    return (step < 0 && posNow <= targetPos) || (step > 0 && posNow >= targetPos);
+    if (posNow + armAnimationDeg <= SERVO_TOGGLE_POS)
+    {
+        buttonPushedByArm = true;
+    }
+    servo.write(posNow + armAnimationDeg);
+    delay(500);
+    posNow = servo.read();
+    Serial.println("PosNow: " + String(posNow));
+
+    return (armAnimationDeg < 0 && posNow <= targetPos) || (armAnimationDeg > 0 && posNow >= targetPos);
 }
