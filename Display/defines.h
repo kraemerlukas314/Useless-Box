@@ -38,5 +38,5 @@
 #define happinessAdder 2
 #define MIN_HAPPINESS -2000
 #define MAX_HAPPINESS 1000
-#define maxArmAnimations 4
+#define maxArmAnimations 5
 #define MOUTH_POSITION_BOTTOM 30

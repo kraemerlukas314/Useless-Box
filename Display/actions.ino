@@ -20,6 +20,10 @@ void handleButtonPressed()
         animation4();
         break;
 
+    case 5:
+        animation5();
+        break;
+
     default:
         break;
     }

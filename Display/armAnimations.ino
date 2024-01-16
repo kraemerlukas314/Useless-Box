@@ -235,6 +235,64 @@ void animation4()
     }
 }
 
+void animation5()
+{
+    switch (animationStep)
+    {
+    case 0:
+        servo.attach(PIN_SERVO);
+        animationStep++;
+        break;
+
+    case 1:
+        if (moveArm(SERVO_TOGGLE_POS, 20))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+    case 2:
+        if (moveArm(SERVO_TOGGLE_POS + 10, 2))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+
+    case 3:
+        if (moveArm(SERVO_TOGGLE_POS, 1))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+
+    case 4:
+        delay(random(500, 5000));
+        armAnimationInited = false;
+        animationStep++;
+        break;
+
+    case 5:
+        if (moveArm(SERVO_HOME_POS, 5))
+        {
+            armAnimationInited = false;
+            animationStep++;
+        }
+        break;
+
+    case 6:
+        servo.detach();
+        animationFinished = true;
+        animationStep = 0;
+        activeAnimation = -1;
+        break;
+
+    default:
+        break;
+    }
+}
+
 bool moveArm(byte targetPos, byte steps)
 {
     byte posNow = servo.read();
