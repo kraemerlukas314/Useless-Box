@@ -112,8 +112,7 @@ void loop()
     {
       happiness += happinessAdder * 10;
     }
-    incrementButtonPresses();
-  }
+    }
   else if (getButtonState() && activeAnimation == -1)
   {
     if (happiness - dissatisfaction >= MIN_HAPPINESS)
@@ -123,6 +122,7 @@ void loop()
     activeAnimation = random(1, maxArmAnimations + 1);
     animationStep = 0;
     buttonPushedByArm = false;
+    incrementButtonPresses();
 
     Serial.println("Starting new animation: " + String(activeAnimation));
   }
