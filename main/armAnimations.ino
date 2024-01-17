@@ -79,7 +79,7 @@ void animation2()
         break;
 
     case 3:
-        delay(random(500, 2000));
+        delay(random(500, 1500));
         armAnimationInited = false;
         animationStep++;
         break;
@@ -269,7 +269,7 @@ void animation5()
         break;
 
     case 4:
-        delay(random(500, 5000));
+        delay(random(500, 3000));
         armAnimationInited = false;
         animationStep++;
         break;
@@ -287,6 +287,24 @@ void animation5()
         animationFinished = true;
         animationStep = 0;
         activeAnimation = -1;
+        break;
+
+    default:
+        break;
+    }
+}
+
+void animation6()
+{
+    switch (animationStep)
+    {
+    case 0:
+        servo.attach(PIN_SERVO);
+        animationStep++;
+        break;
+
+    case 1:
+
         break;
 
     default:
