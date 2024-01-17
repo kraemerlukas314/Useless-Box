@@ -29,11 +29,14 @@
 #define EYE_LEFT_MIDDLE_Y EYES_DISTANCE_EDGES + EYES_SIZE
 #define EYE_RIGHT_MIDDLE_X (X_MAX - (EYES_DISTANCE_EDGES + EYES_SIZE))
 #define EYE_RIGHT_MIDDLE_Y EYES_DISTANCE_EDGES + EYES_SIZE
-#define intervall 1000
-#define dissatisfaction 100
+#define intervall 10
+#define dissatisfaction 400
 #define eyeLidsStandard \
     {                   \
-        3, 3, 3, 3       \
+        3, 3, 3, 3      \
     } // kommentar
-#define happinessAdder 1
-#define maxArmAnimations 2
+#define happinessAdder 2
+#define MIN_HAPPINESS -2000
+#define MAX_HAPPINESS 1000
+#define maxArmAnimations 5
+#define MOUTH_POSITION_BOTTOM 30
