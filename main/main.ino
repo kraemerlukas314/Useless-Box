@@ -7,16 +7,10 @@ Servo servo;
 int eyesColor = 0x0066ff;
 int eyesColorSize = EYES_SIZE / 2;
 int eyesPupilSize = EYES_SIZE / 2.8;
-int mouthStatus = 0;
-int mouthStatusOld = -1;
-int eyesStatus = 0;
-int eyesStatusOld = -10000;
-double eyeLidsStatus[4] = {3, 3, 3, 3};
-double eyeLidsStatusOld[4] = {-1, -1, -1, -1};
 long timeLast = millis();
 int happiness = random(100);
 int blinker = 0;
-int blinkTimer = 150;
+int blinkTimer = 200;
 byte servoPosSwitch = 0;
 byte servoPosHome = 0;
 byte servoPosCurrent = 0;
@@ -39,6 +33,11 @@ int animationStep = 0;
 bool animationFinished = true;
 bool armAnimationInited = false;
 int armAnimationDeg = 0;
+bool sleeping = false;
+int tiredness = 0;
+int sleepTimer = 200;
+int maxSleepZs = 3;
+int sleepZCounter = maxSleepZs;
 
 void setup()
 {
@@ -84,6 +83,7 @@ void setup()
   eyesRedraw();
   eyeLidsRedraw();
   mouthDrawStatus(0);
+  servo.detach();
 }
 
 void loop()
@@ -99,7 +99,15 @@ void loop()
     {
       happiness += happinessAdder;
     }
-    handleStandardExpression();
+
+    if (tiredness < SLEEP_TIME)
+    {
+      tiredness++;
+    }
+    if (!sleeping)
+    {
+      handleStandardExpression();
+    }
   }
   else if (!getButtonState() && activeAnimation != -1 && !buttonPushedByArm)
   {
@@ -112,7 +120,7 @@ void loop()
     {
       happiness += happinessAdder * 10;
     }
-    }
+  }
   else if (getButtonState() && activeAnimation == -1)
   {
     if (happiness - dissatisfaction >= MIN_HAPPINESS)
@@ -123,6 +131,15 @@ void loop()
     animationStep = 0;
     buttonPushedByArm = false;
     incrementButtonPresses();
+    if (tiredness - 3000 > 0)
+    {
+      tiredness -= 3000;
+    }
+    else
+    {
+      tiredness = 0;
+    }
+    sleeping = false;
 
     Serial.println("Starting new animation: " + String(activeAnimation));
   }
@@ -135,7 +152,7 @@ void loop()
   }
 
   // Blinking
-  if (blinker <= 0)
+  if (blinker <= 0 && !sleeping)
   {
     eyesBlink();
     blinker = blinkTimer;
@@ -143,6 +160,27 @@ void loop()
   else
   {
     --blinker;
+  }
+  if (sleeping)
+  {
+
+    if (sleepTimer <= 0)
+    {
+      if (sleepZCounter >= maxSleepZs)
+      {
+        displayClear();
+        sleepZCounter = 0;
+      }
+      tft.setTextSize(random(3, 7));
+      tft.setCursor(random(25, 215), random(25, 215));
+      tft.print('z');
+      sleepZCounter++;
+      sleepTimer = 200;
+    }
+    else
+    {
+      sleepTimer--;
+    }
   }
 }
 
